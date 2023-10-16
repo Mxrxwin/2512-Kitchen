@@ -27,16 +27,16 @@ const styles = StyleSheet.create({
     marginRight: 12
   },
   PostTitle: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 15,
     marginRight: 65,
-    fontFamily: 'stolzl',
+    fontFamily: 'stolzl'
   },
   PostDetails: {
     flexDirection: 'column'
   },
   PostData: {
     fontSize: 12,
-    color: 'rgba(0,0,0,0.4)'
+    color: 'rgba(0,0,0,0.4)',
+    fontFamily: 'stolzl'
   }
 })

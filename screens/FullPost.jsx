@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   PostText: {
     padding: 20,
     fontSize: 18,
-    lineHeight: 24,
+    lineHeight: 24
   },
   PostDescription: {
     fontSize: 15,
