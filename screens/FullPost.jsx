@@ -82,7 +82,8 @@ export default FullPostScreen = ({ route, navigation }) => {
         <MotiView  style={{ width: "100%", height: 300 }}>
 
         </MotiView>
-        <View style={{backgroundColor: '#fff', borderTopLeftRadius: 50, borderTopRightRadius: 50, }}>
+        <View style={{backgroundColor: '#fff', borderTopLeftRadius: 50, borderTopRightRadius: 50 }}>
+          <Text style={styles.PostTitle}>{title}</Text>
           <Text style={styles.PostText}>{text}</Text>
           <Text style={styles.PostDescription}>
             {new Date(data.createdAt).toLocaleDateString()}
@@ -91,7 +92,7 @@ export default FullPostScreen = ({ route, navigation }) => {
       </ScrollView>
       <MotiView
         from={{ translateY: -80 }}
-        animate={{ translateY: yValue > 190 ? 0 : -80 }}
+        animate={{ translateY: yValue > 380 ? 0 : -80 }}
         transition={{ type: "timing", duration: "300" }}
         style={{
           width: "100%",
@@ -134,14 +135,21 @@ const styles = StyleSheet.create({
   },
   PostText: {
     padding: 20,
-    fontSize: 24,
+    fontSize: 18,
     bottom: 20,
+    fontFamily: 'stolzl_light',
+  },
+  PostTitle: {
+    alignSelf: 'center',
+    fontSize: 30,
+    fontFamily: 'stolzl',
+    padding: 10
   },
   PostDescription: {
     fontSize: 15,
     lineHeight: 24,
-    fontWeight: "200",
-    alignItems: "center",
+    fontFamily: 'stolzl',
+    alignSelf: "flex-start",
     position: "absolute",
     padding: 20,
     bottom: 0,

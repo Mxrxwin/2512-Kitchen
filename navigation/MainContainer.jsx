@@ -18,6 +18,7 @@ const Stack = createStackNavigator();
 const loadFonts = async () => {
   await Font.loadAsync({
     stolzl: require("../assets/fonts/stolzl_regular.otf"),
+    stolzl_light: require("../assets/fonts/stolzl_light.otf")
   });
 };
 
