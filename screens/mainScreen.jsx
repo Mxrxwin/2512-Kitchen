@@ -14,9 +14,10 @@ import { ActivityIndicator } from "react-native";
 import { Post } from "../components/post";
 import filter from "lodash.filter";
 
-const API_DATA = "https://6515c9e609e3260018c924d0.mockapi.io/Article";
+
 
 export default function MainScreen({ navigation }) {
+  const API_DATA = "https://6515c9e609e3260018c924d0.mockapi.io/Article";
   const [isLoading, setIsLoading] = React.useState(false);
   const [items, setItems] = React.useState([]);
   const [filteredItems, setFilteredItems] = React.useState([]);
@@ -109,7 +110,7 @@ export default function MainScreen({ navigation }) {
                 navigation.navigate("FullPost", {
                   id: item.id,
                   title: item.title,
-                  createdAt: item.createdAt,
+                  text: item.text,
                 })
               }
             >
