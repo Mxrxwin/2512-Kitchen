@@ -28,6 +28,7 @@ export default FullPostScreen = ({ route, navigation }) => {
   });
 
 
+
   React.useEffect(() => {
     navigation.setOptions({
       title,

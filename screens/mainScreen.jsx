@@ -6,15 +6,13 @@ import {
   View,
   Text,
   RefreshControl,
+  FlatList
 } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import { FlatList, TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native";
 import { Post } from "../components/post";
-import filter from "lodash.filter";
-
-
 
 export default function MainScreen({ navigation }) {
   const API_DATA = "https://6515c9e609e3260018c924d0.mockapi.io/Article";
@@ -48,7 +46,9 @@ export default function MainScreen({ navigation }) {
   const handleSearch = (query) => {
     setSearchQuery(query);
     const formatedQuery = query.toLowerCase();
-    const filteredData = filteredItems.filter((item) => contains(item, formatedQuery));
+    const filteredData = filteredItems.filter((item) =>
+      contains(item, formatedQuery)
+    );
     setItems(filteredData);
   };
 
@@ -100,6 +100,7 @@ export default function MainScreen({ navigation }) {
         </View>
 
         <FlatList
+          style={{ flex: 1 }}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={FetchPosts} />
           }
@@ -120,8 +121,7 @@ export default function MainScreen({ navigation }) {
                 createdAt={item.createdAt}
               />
             </TouchableOpacity>
-          )}
-        />
+          )}/>
       </SafeAreaView>
     </View>
   );
