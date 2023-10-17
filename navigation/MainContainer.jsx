@@ -8,7 +8,7 @@ import CustomDrawer from "./CustomDrawer";
 import MainScreen from "../screens/mainScreen";
 import Account from "../screens/account";
 import Settings from "../screens/settings";
-import { FullPostScreen } from "../screens/FullPost";
+import  FullPostScreen  from "../screens/FullPost";
 
 import { useEffect, useState } from "react";
 

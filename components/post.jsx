@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1',
+    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   PostImage: {
     width: 60,
