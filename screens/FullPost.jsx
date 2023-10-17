@@ -19,15 +19,12 @@ export default FullPostScreen = ({ route, navigation }) => {
   const [data, setData] = React.useState([]);
   const { id, title, text } = route.params;
 
-
   const animation = useDynamicAnimation(() => {
     return {
       width: "100%",
       height: 300,
     };
   });
-
-
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -56,7 +53,7 @@ export default FullPostScreen = ({ route, navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <ImageBackground style={{ flex: 1, width: '100%', height: 450}} source={{ uri: data.imageUrl }}>
       <ScrollView
         style={{ flex: 1 }}
         onScroll={(e) => {
@@ -74,36 +71,27 @@ export default FullPostScreen = ({ route, navigation }) => {
           setYValue(e.nativeEvent.contentOffset.y.toFixed(0));
         }}
       >
-        <MotiView
-          state={animation}
-          style={{ width: "100%", height: 300 }}
-        >
-          <ImageBackground
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-            source={{ uri: data.imageUrl }}
-          >
-            <TouchableOpacity style={{ padding: 20 }}>
-              <AntDesign
-                name="arrowleft"
-                size={35}
-                color="white"
-                onPress={() => navigation.navigate("Home")}
-              />
-            </TouchableOpacity>
-          </ImageBackground>
-        </MotiView>
+        <TouchableOpacity style={{ padding: 20 }}>
+          <AntDesign
+            name="arrowleft"
+            size={35}
+            color="white"
+            onPress={() => navigation.navigate("Home")}
+          />
+        </TouchableOpacity>
+        <MotiView  style={{ width: "100%", height: 300 }}>
 
-        <Text style={styles.PostText}>{text}</Text>
-        <Text style={styles.PostDescription}>
-          {new Date(data.createdAt).toLocaleDateString()}
-        </Text>
+        </MotiView>
+        <View style={{backgroundColor: '#fff', borderTopLeftRadius: 50, borderTopRightRadius: 50, }}>
+          <Text style={styles.PostText}>{text}</Text>
+          <Text style={styles.PostDescription}>
+            {new Date(data.createdAt).toLocaleDateString()}
+          </Text>
+        </View>
       </ScrollView>
       <MotiView
         from={{ translateY: -80 }}
-        animate={{ translateY: yValue > 150 ? 0 : -80 }}
+        animate={{ translateY: yValue > 190 ? 0 : -80 }}
         transition={{ type: "timing", duration: "300" }}
         style={{
           width: "100%",
@@ -126,7 +114,7 @@ export default FullPostScreen = ({ route, navigation }) => {
         </TouchableOpacity>
         <MotiView
           from={{ translateX: -60 }}
-          animate={{ translateX: yValue > 150 ? 0 : -50 }}
+          animate={{ translateX: yValue > 190 ? 0 : -50 }}
           transition={{ type: "timing", duration: "300" }}
           style={{ marginTop: 10 }}
         >
@@ -135,7 +123,7 @@ export default FullPostScreen = ({ route, navigation }) => {
           </Text>
         </MotiView>
       </MotiView>
-    </View>
+    </ImageBackground>
   );
 };
 
