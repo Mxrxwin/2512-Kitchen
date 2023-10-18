@@ -8,7 +8,7 @@ import {
   RefreshControl,
   FlatList
 } from "react-native";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Octicons , Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { TextInput } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native";
@@ -79,7 +79,7 @@ export default function MainScreen({ navigation }) {
             style={{ alignItems: "flex-start", margin: 16 }}
             onPress={navigation.openDrawer}
           >
-            <FontAwesome name="bars" size={28} color="black" />
+            <Octicons name="three-bars" size={28} color="black" />
           </TouchableOpacity>
           <View style={styles.search}>
             <Ionicons
