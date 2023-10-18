@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -12,12 +12,14 @@ import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { MotiView, useDynamicAnimation } from "moti";
+import themeContext from "../components/themeContext";
 
 export default FullPostScreen = ({ route, navigation }) => {
   const [yValue, setYValue] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const { id, title, text } = route.params;
+  const theme = useContext(themeContext);
 
   const animation = useDynamicAnimation(() => {
     return {
@@ -82,10 +84,10 @@ export default FullPostScreen = ({ route, navigation }) => {
         <MotiView  style={{ width: "100%", height: 300 }}>
 
         </MotiView>
-        <View style={{backgroundColor: '#fff', borderTopLeftRadius: 50, borderTopRightRadius: 50 }}>
-          <Text style={styles.PostTitle}>{title}</Text>
-          <Text style={styles.PostText}>{text}</Text>
-          <Text style={styles.PostDescription}>
+        <View style={{backgroundColor: theme.backgroundColor, borderTopLeftRadius: 50, borderTopRightRadius: 50 }}>
+          <Text style={[styles.PostTitle, {color: theme.textColor}]}>{title}</Text>
+          <Text style={[styles.PostText, {color: theme.textColor}]}>{text}</Text>
+          <Text style={[styles.PostDescription, {color: theme.textColor}]}>
             {new Date(data.createdAt).toLocaleDateString()}
           </Text>
         </View>
@@ -103,13 +105,14 @@ export default FullPostScreen = ({ route, navigation }) => {
           elevation: 6,
           flexDirection: "row",
           alignItems: "center",
+          backgroundColor: theme.headerColor,
         }}
       >
         <TouchableOpacity style={{ padding: 20, marginTop: 10 }}>
           <AntDesign
             name="arrowleft"
             size={35}
-            color="black"
+            color={theme.textColor}
             onPress={() => navigation.navigate("Home")}
           />
         </TouchableOpacity>
@@ -119,7 +122,7 @@ export default FullPostScreen = ({ route, navigation }) => {
           transition={{ type: "timing", duration: "300" }}
           style={{ marginTop: 10 }}
         >
-          <Text style={{ marginTop: 10, fontSize: 24, fontFamily: "stolzl" }}>
+          <Text style={{ marginTop: 10, fontSize: 24, fontFamily: "stolzl", color: theme.textColor }}>
             {title}
           </Text>
         </MotiView>

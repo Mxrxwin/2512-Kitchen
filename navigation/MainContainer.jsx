@@ -4,13 +4,14 @@ import * as Font from "expo-font";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import CustomDrawer from "./CustomDrawer";
+import themeContext from "../components/themeContext";
 
 import MainScreen from "../screens/mainScreen";
 import Account from "../screens/account";
 import Settings from "../screens/settings";
 import  FullPostScreen  from "../screens/FullPost";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -41,6 +42,8 @@ function MyStack() {
 
 function MyDrawer() {
   const [fontLoaded, setFontLoaded] = useState(false);
+  const theme = useContext(themeContext);
+
   useEffect(() => {
     const loadFontAsync = async () => {
       await loadFonts();
@@ -61,10 +64,10 @@ function MyDrawer() {
         headerShown: false,
         drawerActiveBackgroundColor: "#83E144",
         drawerActiveTintColor: "#fff",
-        drawerInactiveTintColor: "#333",
+        drawerInactiveTintColor: theme.textColor,
         drawerLabelStyle: {
           marginLeft: -20,
-          fontFamily: "stolzl",
+          fontFamily: "stolzl", 
         },
       }}
     >

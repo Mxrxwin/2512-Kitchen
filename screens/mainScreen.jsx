@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,6 +13,7 @@ import axios from "axios";
 import { TextInput } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native";
 import { Post } from "../components/post";
+import themeContext from "../components/themeContext";
 
 export default function MainScreen({ navigation }) {
   const API_DATA = "https://6515c9e609e3260018c924d0.mockapi.io/Article";
@@ -20,6 +21,7 @@ export default function MainScreen({ navigation }) {
   const [items, setItems] = React.useState([]);
   const [filteredItems, setFilteredItems] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const theme = useContext(themeContext);
 
   const FetchPosts = () => {
     setIsLoading(true);
@@ -70,7 +72,7 @@ export default function MainScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.page}>
+    <View style={[styles.page, {backgroundColor: theme.backgroundColor}]}>
       <SafeAreaView style={{ flex: 1 }}>
         <View
           style={{ flexDirection: "row", alignItems: "center", marginTop: 25 }}
@@ -79,20 +81,21 @@ export default function MainScreen({ navigation }) {
             style={{ alignItems: "flex-start", margin: 16 }}
             onPress={navigation.openDrawer}
           >
-            <Octicons name="three-bars" size={28} color="black" />
+            <Octicons name="three-bars" size={28} color={theme.textColor} />
           </TouchableOpacity>
-          <View style={styles.search}>
+          <View style={[styles.search, {backgroundColor: theme.searchColor}]}>
             <Ionicons
               style={{ padding: 5 }}
               name="search"
               size={20}
-              color="#3333"
+              color={theme.searchPlaceholderColor}
             />
             <TextInput
               placeholder="Search   "
+              placeholderTextColor={theme.searchPlaceholderColor}
               clearButtonMode="always"
               autoCapitalize="none"
-              style={{ fontFamily: "stolzl" }}
+              style={{ fontFamily: "stolzl", color: theme.textColor}}
               value={searchQuery}
               onChangeText={(query) => handleSearch(query)}
             />
@@ -130,7 +133,6 @@ export default function MainScreen({ navigation }) {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   search: {
     width: "80%",

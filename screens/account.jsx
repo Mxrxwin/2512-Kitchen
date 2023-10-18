@@ -15,6 +15,7 @@ import {
 } from "firebase/auth";
 import { Ionicons, Octicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import themeContext from "../components/themeContext";
 
 export default function PersonalInfoPage({ navigation }) {
   const [email, setEmail] = useState("");
@@ -22,6 +23,7 @@ export default function PersonalInfoPage({ navigation }) {
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
   const [hidePass, setHidePass] = useState(false);
+  const theme = useContext(themeContext);
 
   const signIn = async () => {
     setLoading(true);
@@ -55,7 +57,7 @@ export default function PersonalInfoPage({ navigation }) {
   };
 
   return (
-    <View style={[styles.page, { backgroundColor: "white" }]}>
+    <View style={[styles.page, { backgroundColor: theme.backgroundColor }]}>
       <SafeAreaView style={{flex:1}}>
         <View
           style={{ flexDirection: "row", alignItems: "center", marginrTop: 25 }}
@@ -64,26 +66,26 @@ export default function PersonalInfoPage({ navigation }) {
             style={{ alignItems: "flex-start", margin: 16 }}
             onPress={navigation.openDrawer}
           >
-            <Octicons name="three-bars" size={28} color="black" />
+            <Octicons name="three-bars" size={28} color={theme.textColor} />
           </TouchableOpacity>
         </View>
 
         <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center', marginBottom: 100}} >
           <TextInput
-            style={styles.input}
+            style={[styles.input, {backgroundColor: theme.searchColor, color: theme.textColor}]}
             placeholder="Email"
             autoCapitalize="none"
-            placeholderTextColor="#aaa"
+            placeholderTextColor={theme.searchPlaceholderColor}
             onChangeText={(text) => setEmail(text)}
           ></TextInput>
-          <View style={styles.input}>
+          <View style={[styles.input, {backgroundColor: theme.searchColor}]}>
             <TextInput
-              style={{ width: "90%" }}
+              style={{ fontFamily: 'stolzl', width: "90%" }}
               secureTextEntry={!hidePass}
               value={password}
               onChangeText={setPassword}
               placeholder="Password"
-              placeholderTextColor="#aaa"
+              placeholderTextColor= {theme.searchPlaceholderColor}
             ></TextInput>
             <Ionicons
               name={hidePass ? "eye" : "eye-off"}
@@ -133,11 +135,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     height: 45,
     borderWidth: 1,
+    borderColor: '#3333',
     borderRadius: 10,
     padding: 10,
     backgroundColor: "#fff",
     fontWeight: "400",
     flexDirection: "row",
+    fontFamily: 'stolzl'
   },
   button: {
     borderRadius: 10,
