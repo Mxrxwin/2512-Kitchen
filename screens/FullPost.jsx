@@ -115,7 +115,7 @@ export default FullPostScreen = ({ route, navigation }) => {
         </TouchableOpacity>
         <MotiView
           from={{ translateX: -60 }}
-          animate={{ translateX: yValue > 190 ? 0 : -50 }}
+          animate={{ translateX: yValue > 380 ? 0 : -50 }}
           transition={{ type: "timing", duration: "300" }}
           style={{ marginTop: 10 }}
         >
