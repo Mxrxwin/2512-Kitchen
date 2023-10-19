@@ -7,7 +7,7 @@ export default function Settings({navigation}) {
     <View style={styles.page}>
       <SafeAreaView style={{ flex: 1 }}>
         <TouchableOpacity
-          style={{ alignItems: "flex-end", margin: 16, marginTop: 25 }}
+          style={{ alignItems: "flex-start", margin: 16, marginTop: 25 }}
           onPress={navigation.openDrawer}
           >
           <FontAwesome name="bars" size={28} color="black" />

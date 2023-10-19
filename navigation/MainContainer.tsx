@@ -2,6 +2,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { createStackNavigator } from "@react-navigation/stack";
+import { User, onAuthStateChanged } from "firebase/auth";
 
 import CustomDrawer from "./CustomDrawer";
 import themeContext from "../components/themeContext";
@@ -10,11 +11,14 @@ import MainScreen from "../screens/mainScreen";
 import Account from "../screens/account";
 import Settings from "../screens/settings";
 import  FullPostScreen  from "../screens/FullPost";
+import Personal from "../screens/personal";
 
 import { useEffect, useState, useContext } from "react";
+import { FIREBASE_AUTH } from "../firebase.config";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+const InsideLayoutLogin = createStackNavigator();
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -22,6 +26,25 @@ const loadFonts = async () => {
     stolzl_light: require("../assets/fonts/stolzl_light.otf")
   });
 };
+
+function InsideStackLogin() {
+  const [user, setUser] = useState<User | null>(null);  
+
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      console.log(user);
+      setUser(user);
+    })
+  }, [])
+
+  return (
+    <InsideLayoutLogin.Navigator>
+      {user ? 
+      <InsideLayoutLogin.Screen name="LogedIn" component={Personal} options={{headerShown: false}}/> :  
+      <InsideLayoutLogin.Screen name="LogIn" component={Account} options={{headerShown: false}}/>}
+    </InsideLayoutLogin.Navigator>
+  );
+}
 
 function MyStack() {
   return (
@@ -58,6 +81,7 @@ function MyDrawer() {
   }
 
   return (
+
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
@@ -82,7 +106,7 @@ function MyDrawer() {
       />
       <Drawer.Screen
         name="Профиль"
-        component={Account}
+        component={InsideStackLogin}
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="person-outline" size={24} color={color} />

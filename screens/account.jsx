@@ -80,7 +80,7 @@ export default function PersonalInfoPage({ navigation }) {
           ></TextInput>
           <View style={[styles.input, {backgroundColor: theme.searchColor}]}>
             <TextInput
-              style={{ fontFamily: 'stolzl', width: "90%" }}
+              style={{ fontFamily: 'stolzl', width: "90%", color: theme.textColor }}
               secureTextEntry={!hidePass}
               value={password}
               onChangeText={setPassword}
