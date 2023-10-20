@@ -15,7 +15,7 @@ export const Loading = () => {
             backgroundColor: theme.backgroundColor
         }}>
         <ActivityIndicator size="large"/>
-        <Text style={{ marginTop:15, fontWeight: 300, fontFamily: "slolzl", color: theme.textColor}}>Загрузка</Text>
+        <Text style={{ marginTop:15, fontWeight: 300, color: theme.textColor}}>Загрузка</Text>
     </View>
     )
 }

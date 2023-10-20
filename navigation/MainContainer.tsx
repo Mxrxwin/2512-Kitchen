@@ -12,6 +12,7 @@ import Account from "../screens/account";
 import Settings from "../screens/settings";
 import  FullPostScreen  from "../screens/FullPost";
 import Personal from "../screens/personal";
+import MenuScreen from "../screens/menuScreen";
 
 import { useEffect, useState, useContext } from "react";
 import { FIREBASE_AUTH } from "../firebase.config";
@@ -110,6 +111,15 @@ function MyDrawer() {
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="person-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Меню"
+        component={MenuScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="calendar-outline" size={24} color={color} />
           ),
         }}
       />
