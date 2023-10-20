@@ -107,14 +107,14 @@ export default function MainScreen({ navigation }) {
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={FetchPosts} />
           }
+          showsVerticalScrollIndicator={false}
           data={items}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("FullPost", {
                   id: item.id,
-                  title: item.title,
-                  text: item.text,
+                  title: item.title
                 })
               }
             >

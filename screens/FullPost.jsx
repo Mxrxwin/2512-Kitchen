@@ -18,7 +18,8 @@ export default FullPostScreen = ({ route, navigation }) => {
   const [yValue, setYValue] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const { id, title, text } = route.params;
+  const [CPFCP, setCPFCP] = React.useState([]);
+  const { id, title} = route.params;
   const theme = useContext(themeContext);
 
   const animation = useDynamicAnimation(() => {
@@ -28,6 +29,7 @@ export default FullPostScreen = ({ route, navigation }) => {
     };
   });
 
+
   React.useEffect(() => {
     navigation.setOptions({
       title,
@@ -36,6 +38,7 @@ export default FullPostScreen = ({ route, navigation }) => {
       .get("https://6515c9e609e3260018c924d0.mockapi.io/Article/" + id)
       .then(({ data }) => {
         setData(data);
+        setCPFCP(data.CPFCP);
       })
       .catch((err) => {
         console.log(err);
@@ -85,8 +88,16 @@ export default FullPostScreen = ({ route, navigation }) => {
 
         </MotiView>
         <View style={{backgroundColor: theme.backgroundColor, borderTopLeftRadius: 50, borderTopRightRadius: 50 }}>
-          <Text style={[styles.PostTitle, {color: theme.textColor}]}>{title}</Text>
-          <Text style={[styles.PostText, {color: theme.textColor}]}>{text}</Text>
+          <Text style={[styles.PostTitle, {color: theme.textColor}]}>{data.title}</Text>
+          <Text style={[styles.PostText, {color: theme.textColor}]}>{data.recipe}{data.recipe}</Text>
+          <View style={styles.PostPropsContainer}>
+            {CPFCP.map((item, index) => (
+              <View style={styles.PostProps} key={index}>
+                <Text style={[styles.PostPropsTitle, { color: theme.textColor }]}>{'КБЖУ₽'[index]}</Text>
+                <Text style={[styles.PostPropsText, { color: theme.textColor }]}>{item}</Text>
+              </View>
+            ))}
+          </View>
           <Text style={[styles.PostDescription, {color: theme.textColor}]}>
             {new Date(data.createdAt).toLocaleDateString()}
           </Text>
@@ -137,6 +148,30 @@ const styles = StyleSheet.create({
     height: 300,
   },
   PostText: {
+    padding: 20,
+    fontSize: 18,
+    bottom: 20,
+    fontFamily: 'stolzl_light',
+  },
+  PostPropsContainer: {
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+    marginBottom: 40,
+  },
+  PostProps: {
+    padding: 10,
+    bottom: 20,
+    alignItems: 'center',
+  },
+  PostPropsText: {
+    fontFamily: 'stolzl_light',
+    fontSize: 22,
+  },
+  PostPropsTitle: {
+    fontFamily: 'stolzl',
+    fontSize: 26,
+  },
+  PostPrice: {
     padding: 20,
     fontSize: 18,
     bottom: 20,
