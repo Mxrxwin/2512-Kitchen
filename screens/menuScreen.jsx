@@ -11,13 +11,12 @@ import {
 import { Octicons , Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { TextInput } from "react-native-gesture-handler";
-import { ActivityIndicator } from "react-native";
-import { Post } from "../components/post";
+import { Week } from "../components/week";
 import themeContext from "../components/themeContext";
 import { Loading } from "../components/loading";
 
-export default function MenuScreen({ navigation }) {
-  const API_DATA = "https://6515c9e609e3260018c924d0.mockapi.io/Article";
+export default function MainScreen({ navigation }) {
+  const API_DATA = "https://6515c9e609e3260018c924d0.mockapi.io/menu";
   const [isLoading, setIsLoading] = React.useState(false);
   const [items, setItems] = React.useState([]);
   const [filteredItems, setFilteredItems] = React.useState([]);
@@ -63,6 +62,7 @@ export default function MenuScreen({ navigation }) {
     );
   }
 
+
   return (
     <View style={[styles.page, {backgroundColor: theme.backgroundColor}]}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -102,20 +102,12 @@ export default function MenuScreen({ navigation }) {
           showsVerticalScrollIndicator={false}
           data={items}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("FullPost", {
-                  id: item.id,
-                  title: item.title
-                })
-              }
-            >
-              <Post
+              <Week
                 title={item.title}
-                imageUrl={item.imageUrl}
-                createdAt={item.createdAt}
+                dishes={item.dishes}
+                date={item.date}
+                id={item.id}
               />
-            </TouchableOpacity>
           )}/>
       </SafeAreaView>
     </View>
