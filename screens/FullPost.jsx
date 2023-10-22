@@ -19,6 +19,8 @@ export default FullPostScreen = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [CPFCP, setCPFCP] = React.useState([]);
+  const [ingredients, setIngredients] = React.useState({});
+  const [ingredientsKey, setIngredientsKey] = React.useState([]);
   const { id, title} = route.params;
   const theme = useContext(themeContext);
 
@@ -39,6 +41,7 @@ export default FullPostScreen = ({ route, navigation }) => {
       .then(({ data }) => {
         setData(data);
         setCPFCP(data.CPFCP);
+        setIngredients(data.Ingredients);
       })
       .catch((err) => {
         console.log(err);
@@ -56,6 +59,10 @@ export default FullPostScreen = ({ route, navigation }) => {
       </View>
     );
   }
+
+  React.useEffect(() => {
+    setIngredientsKey(Object.keys(ingredients))
+  }, [ingredients])
 
   return (
     <ImageBackground style={{ flex: 1, width: '100%', height: 450}} source={{ uri: data.imageUrl }}>
@@ -90,6 +97,14 @@ export default FullPostScreen = ({ route, navigation }) => {
         <View style={{backgroundColor: theme.backgroundColor, borderTopLeftRadius: 50, borderTopRightRadius: 50 }}>
           <Text style={[styles.PostTitle, {color: theme.textColor}]}>{data.title}</Text>
           <Text style={[styles.PostText, {color: theme.textColor}]}>{data.recipe}{data.recipe}</Text>
+          <View style={{marginBottom: 30}}>
+            <Text style={[styles.IngredientsTitle, {color: theme.textColor}]}>Ингридиенты: </Text>
+            {ingredientsKey.map((item, index) => (
+              <View key={index}>
+                <Text style={styles.Ingredients}>{item} : {ingredients[item]}</Text>
+              </View>
+            ))}
+          </View>
           <View style={styles.PostPropsContainer}>
             {CPFCP.map((item, index) => (
               <View style={styles.PostProps} key={index}>
@@ -110,7 +125,6 @@ export default FullPostScreen = ({ route, navigation }) => {
         style={{
           width: "100%",
           height: 80,
-          backgroundColor: "#fff",
           position: "absolute",
           top: 0,
           elevation: 6,
@@ -150,7 +164,6 @@ const styles = StyleSheet.create({
   PostText: {
     padding: 20,
     fontSize: 18,
-    bottom: 20,
     fontFamily: 'stolzl_light',
   },
   PostPropsContainer: {
@@ -171,12 +184,6 @@ const styles = StyleSheet.create({
     fontFamily: 'stolzl',
     fontSize: 26,
   },
-  PostPrice: {
-    padding: 20,
-    fontSize: 18,
-    bottom: 20,
-    fontFamily: 'stolzl_light',
-  },
   PostTitle: {
     alignSelf: 'center',
     fontSize: 30,
@@ -192,4 +199,15 @@ const styles = StyleSheet.create({
     padding: 20,
     bottom: 0,
   },
+  IngredientsTitle: {
+    fontSize: 26,
+    fontFamily: "stolzl",
+    padding: 20
+  },
+  Ingredients: {
+    fontSize: 18,
+    fontFamily: "stolzl_light",
+    marginStart: 20,
+    marginBottom: 10,
+  }
 });

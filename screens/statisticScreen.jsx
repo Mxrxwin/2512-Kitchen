@@ -19,8 +19,8 @@ export default function StatisticScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const theme = useContext(themeContext);
   const [statistics, setStatistics] = useState({});
-  const [searchQuery, setSearchQuery] = useState("");
   const [keys, setKeys] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filteredKeys, setFilteredKeys] = useState([]);
   const [sortType, setSortType] = useState(0);
   const valuesToExclude = ["Данные неизвестны", "Нихуя", "Отсутствовали"];
