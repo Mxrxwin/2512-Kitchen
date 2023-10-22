@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   RefreshControl,
   FlatList
 } from "react-native";
-import { Octicons , Ionicons } from "@expo/vector-icons";
+import { Octicons , Ionicons, FontAwesome  } from "@expo/vector-icons";
 import axios from "axios";
 import { TextInput } from "react-native-gesture-handler";
 import { Week } from "../components/week";
@@ -21,35 +21,16 @@ export default function MainScreen({ navigation }) {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortType, setSortType] = useState(false);
   const theme = useContext(themeContext);
-  const [statistics, setStatistics] = useState({});
-
-
-  const FetchDishes = (dishes) => {
-    setStatistics((prevStatistics) => {
-      const updatedStatistics = { ...prevStatistics };
-
-      (dishes).forEach((element) => {
-        if (updatedStatistics[element]) {
-          updatedStatistics[element] += 1; 
-        } else {
-          updatedStatistics[element] = 1; 
-        }
-      });
-      setStatistics(updatedStatistics);
-    })
-  }
 
   const FetchPosts = () => {
     setIsLoading(true);
-    axios
+    axios  
       .get(API_DATA)
       .then(({ data }) => {
         setItems(data);
         setFilteredItems(data);
-        data.forEach(element => {
-          FetchDishes(element.dishes)
-        });
       })
       .catch((err) => {
         console.log(err);
@@ -59,6 +40,10 @@ export default function MainScreen({ navigation }) {
         setIsLoading(false);
       });
   };
+
+  React.useEffect(() => {
+    sortType ? items.sort((a, b) => a.id - b.id) : items.sort((a, b) => b.id - a.id);
+  }, [items, sortType])
 
   const contains = ({ title }, query) => {
     const lowerCaseTitle = title.toLowerCase();
@@ -87,7 +72,7 @@ export default function MainScreen({ navigation }) {
     <View style={[styles.page, {backgroundColor: theme.backgroundColor}]}>
       <SafeAreaView style={{ flex: 1 }}>
         <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 25 }}
+          style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginTop: 25 }}
         >
           <TouchableOpacity
             style={{ alignItems: "flex-start", margin: 16 }}
@@ -107,11 +92,17 @@ export default function MainScreen({ navigation }) {
               placeholderTextColor={theme.searchPlaceholderColor}
               clearButtonMode="always"
               autoCapitalize="none"
-              style={{ fontFamily: "stolzl", color: theme.textColor}}
+              style={{ fontFamily: "stolzl",color: theme.textColor}}
               value={searchQuery}
               onChangeText={(query) => handleSearch(query)}
             />
           </View>
+          <TouchableOpacity
+            style={{ alignItems: "flex-start", margin: 16 }}
+            onPress={() => (setSortType(!sortType))}
+          >
+            <FontAwesome name={sortType ? "sort-amount-asc" : "sort-amount-desc"} size={24} color={theme.textColor} />
+          </TouchableOpacity>
         </View>
 
         <FlatList
@@ -140,7 +131,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   search: {
-    width: "80%",
+    width: "75%",
     borderWidth: 1,
     borderColor: "#3333",
     borderRadius: 20,
