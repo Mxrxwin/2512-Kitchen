@@ -43,6 +43,7 @@ export default function MainScreen({ navigation }) {
 
   React.useEffect(() => {
     sortType ? items.sort((a, b) => a.id - b.id) : items.sort((a, b) => b.id - a.id);
+    
   }, [items, sortType])
 
   const contains = ({ title }, query) => {
