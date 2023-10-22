@@ -1,15 +1,11 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { StyleSheet } from "react-native";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import themeContext from "./themeContext";
 import { Octicons } from '@expo/vector-icons';
 
-export const Week = ({ title, dishes, date, id }) => {
-<<<<<<< HEAD
+export const Week = ({ title, dishes, dateStart, dateEnd,id }) => {
   const weekday = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"]
-=======
-  
->>>>>>> 87a1ff0c78b38eddd0c99b2c0b69c2be25a9fd9b
   const theme = useContext(themeContext);
 
   return (
@@ -22,20 +18,15 @@ export const Week = ({ title, dishes, date, id }) => {
       </View>
       <View style={[styles.PostDetails, { color: theme.textColor }]}>
           {dishes.map((element, index) => (
-<<<<<<< HEAD
-            <View style={{flexDirection: 'row'}}>
-              <Text key={index} style={[styles.PostData, { color: theme.textColor, width: '6%'}]}>{weekday[index]}</Text>
+            <View key={index} style={{flexDirection: 'row'}}>
+              <Text style={[styles.PostData, { color: theme.textColor, width: '8%'}]}>{weekday[index]}</Text>
               <Text style={[styles.PostData, { color: theme.textColor }]}>—  {element}</Text>
             </View>
-=======
-            <Text key={index} style={[styles.PostData, { color: theme.textColor }]}>— {element}</Text>
->>>>>>> 87a1ff0c78b38eddd0c99b2c0b69c2be25a9fd9b
           ))}
       </View>
       <View style={{marginTop: 10}}>
-        <Text style={[styles.PostData, { color: theme.textColor }]}>
-            {" "}
-            {new Date(date).toLocaleDateString()}{" "}
+        <Text style={[styles.PostDate, { color: theme.textColor }]}>
+            {dateStart} - {dateEnd}
           </Text>
       </View>
     </View>
@@ -59,12 +50,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   PostData: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: "stolzl",
-<<<<<<< HEAD
     marginEnd: 10
-=======
-    
->>>>>>> 87a1ff0c78b38eddd0c99b2c0b69c2be25a9fd9b
+  },
+  PostDate: {
+    fontSize: 16,
+    fontFamily: "stolzl_light",
+    marginEnd: 10
   },
 });

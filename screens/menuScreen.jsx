@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,11 +17,28 @@ import { Loading } from "../components/loading";
 
 export default function MainScreen({ navigation }) {
   const API_DATA = "https://6515c9e609e3260018c924d0.mockapi.io/menu";
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [items, setItems] = React.useState([]);
-  const [filteredItems, setFilteredItems] = React.useState([]);
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const theme = useContext(themeContext);
+  const [statistics, setStatistics] = useState({});
+
+
+  const FetchDishes = (dishes) => {
+    setStatistics((prevStatistics) => {
+      const updatedStatistics = { ...prevStatistics };
+
+      (dishes).forEach((element) => {
+        if (updatedStatistics[element]) {
+          updatedStatistics[element] += 1; 
+        } else {
+          updatedStatistics[element] = 1; 
+        }
+      });
+      setStatistics(updatedStatistics);
+    })
+  }
 
   const FetchPosts = () => {
     setIsLoading(true);
@@ -30,6 +47,9 @@ export default function MainScreen({ navigation }) {
       .then(({ data }) => {
         setItems(data);
         setFilteredItems(data);
+        data.forEach(element => {
+          FetchDishes(element.dishes)
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -105,7 +125,8 @@ export default function MainScreen({ navigation }) {
               <Week
                 title={item.title}
                 dishes={item.dishes}
-                date={item.date}
+                dateStart={item.dateStart}
+                dateEnd={item.dateEnd}
                 id={item.id}
               />
           )}/>
