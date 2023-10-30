@@ -113,7 +113,8 @@ export default function MenuScreen({ navigation }) {
               <Post
                 title={item.title}
                 imageUrl={item.imageUrl}
-                createdAt={item.createdAt}
+                recipe={item.recipe}
+                CPFCP={item.CPFCP}
               />
             </TouchableOpacity>
           )}/>

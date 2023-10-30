@@ -13,6 +13,7 @@ import Settings from "../screens/settings";
 import  FullPostScreen  from "../screens/FullPost";
 import Personal from "../screens/personal";
 import MenuScreen from "../screens/menuScreen";
+import StatisticScreen from "../screens/statisticScreen";
 
 import { useEffect, useState, useContext } from "react";
 import { FIREBASE_AUTH } from "../firebase.config";
@@ -120,6 +121,15 @@ function MyDrawer() {
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="calendar-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Статистика"
+        component={StatisticScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="md-stats-chart-outline" size={24} color={color} />
           ),
         }}
       />
