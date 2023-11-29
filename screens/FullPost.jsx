@@ -79,7 +79,6 @@ export default FullPostScreen = ({ route, navigation }) => {
     if (ingredients.length === 0) {
       return <Loading />;
     }
-  
 
   return (
     <View style={{ flex: 1, width: "100%", height: 450 }}>
