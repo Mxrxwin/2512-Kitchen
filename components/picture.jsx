@@ -1,59 +1,104 @@
 import React from "react";
-import { FlatList, StyleSheet, View, ImageBackground, Text, useWindowDimensions, Animated } from "react-native";
-import axios from "axios";
-import { Loading } from "./loading";
+import {
+	FlatList,
+	StyleSheet,
+	View,
+	Image,
+	useWindowDimensions,
+	Animated,
+} from "react-native";
 import { PicturePaginator } from "./picturePaginator";
+import { PopupMenu } from "./popupMenu";
 
-export const PictureScroll = ({pictures}) => {
-  const [data, setData] = React.useState([]);
-  const {width} = useWindowDimensions();
-  const scrollX = React.useRef(new Animated.Value(0)).current;
-  const [currentIndex, setCurrentIndex] = React.useState(0);
-  const slidesRef = React.useRef(null);
+export const PictureScroll = ({
+	pictures,
+	deletePosibitity,
+	setImage,
+	setFiles,
+	changePosibility,
+	navigation,
+	dishId
+}) => {
+	const { width } = useWindowDimensions();
+	const scrollX = React.useRef(new Animated.Value(0)).current;
+	const [currentIndex, setCurrentIndex] = React.useState("");
+	const slidesRef = React.useRef(null);
 
-  const viewConfig = React.useRef({ viewAreaCoveragePercentThreshold: 50}).current;
+	const viewConfig = React.useRef({
+		viewAreaCoveragePercentThreshold: 50,
+	}).current;
 
-  const viewableItemsChanges = React.useRef(({ viewableItems }) => {
-    setCurrentIndex(viewableItems[0]);
-  }).current;
+	const viewableItemsChanges = React.useRef(({ viewableItems }) => {
+		const indexData = viewableItems[0].key;
+		setCurrentIndex(indexData);
+	}).current;
 
-  return (
-    <View style={styles.container}>
-      <View style={{flex: 3}}>
-      <View style={{alignItems: 'center'}}>
-        <PicturePaginator data={pictures} scrollX={scrollX}/>
-      </View>
-        <FlatList
-          data={pictures}
-          renderItem={({item}) => ( 
-            <ImageBackground style={[styles.image, {width}]} source={{ uri: item[0]}}/>
-          )}
-          horizontal
-          showsHorizontalScrollIndicator = {false}
-          pagingEnabled
-          bounces={false}
-          keyExtractor={(item) => item[0]}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: {x: scrollX} } }], {
-              useNativeDriver:false,
-          })}
-          onViewableItemsChanged={viewableItemsChanges}
-          scrollEventThrottle={32}
-          viewabilityConfig={viewConfig}
-          ref={slidesRef}
-        />
-      </View>
-    </View>
-  );
+	return (
+		<View>
+			<View>
+				<PicturePaginator data={pictures} scrollX={scrollX} />
+				{deletePosibitity ? (
+					<View style={styles.deleteButton}>
+						<PopupMenu
+							setImage={setImage}
+							currentIndex={currentIndex}
+							setFiles={setFiles}
+							optionsType="delete"
+						/>
+					</View>
+				) : null}
+				{changePosibility ? (
+					<View style={styles.deleteButton}>
+						<PopupMenu
+							setImage={setImage}
+							currentIndex={currentIndex}
+							setFiles={setFiles}
+							optionsType="change"
+							navigation={navigation}
+							dishId={dishId}
+						/>
+					</View>
+				) : null}
+				<FlatList
+					data={pictures}
+					keyExtractor={(item) => item.createdAt}
+					renderItem={({ item }) => (
+						<View style={{ flex: 1 }}>
+							<Image
+								style={[styles.image, { width }]}
+								source={{ uri: item.url }}
+							></Image>
+						</View>
+					)}
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					pagingEnabled
+					bounces={false}
+					onScroll={Animated.event(
+						[{ nativeEvent: { contentOffset: { x: scrollX } } }],
+						{
+							useNativeDriver: false,
+						}
+					)}
+					onViewableItemsChanged={viewableItemsChanges}
+					scrollEventThrottle={32}
+					viewabilityConfig={viewConfig}
+					ref={slidesRef}
+				/>
+			</View>
+		</View>
+	);
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    zIndex: 2
-  },
-  image:{
-    height: 500,
-    justifyContent: 'center',
-    zIndex: 1
-  }
+	image: {
+		height: 418,
+		zIndex: 2,
+	},
+	deleteButton: {
+		zIndex: 1,
+		position: "absolute",
+		marginTop: 25,
+		right: 15,
+	},
 });

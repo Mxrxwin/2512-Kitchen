@@ -1,28 +1,66 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   View,
   Text,
-  Button,
+  Image,
+  ScrollView
 } from "react-native";
-import { Octicons, Ionicons } from "@expo/vector-icons";
-import { NavigationProp } from "@react-navigation/native";
+import { Octicons, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { FIREBASE_AUTH } from "../firebase.config";
 import themeContext from "../components/themeContext";
+import { getAuth } from "firebase/auth";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function Settings({ navigation }) {
+export default function Personal({ navigation }) {
   const theme = useContext(themeContext);
+  const [userData, setUserData] = useState(getAuth().currentUser);
+  const [name, setNewName]= useState(userData.displayName);
+  const [photo, setNewPhoto]= useState(userData.photoURL);
+  const { email, uid, displayName, photoURL } = userData;
+  const defaultPictureURL = "https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      setNewName(userData.displayName);
+      setNewPhoto(userData.photoURL);
+    })
+  );
+
   return (
     <View style={[styles.page, { backgroundColor: theme.backgroundColor }]}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <TouchableOpacity
-          style={{ alignItems: "flex-start", margin: 16, marginTop: 25 }}
-          onPress={navigation.openDrawer}
-        >
-          <Octicons name="three-bars" size={28} color={theme.textColor} />
-        </TouchableOpacity>
+      <ScrollView 
+        contentContainerStyle={{flex: 1}} >
+        <View
+            style={{
+              flexDirection: "row",
+              justifyContent: 'space-between',
+              alignItems: "flex-start",
+              marginTop: 25,
+            }}
+          >
+            <TouchableOpacity
+              style={{ alignItems: "flex-start", margin: 16 }}
+              onPress={navigation.openDrawer}
+            >
+              <SimpleLineIcons name="menu" size={24} color={theme.textColor} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ alignItems: "flex-start", margin: 16 }}
+              onPress={() => navigation.navigate("ChangePersonal")}
+            >
+              <Octicons name="paintbrush" size={24} color={theme.textColor} />
+            </TouchableOpacity>
+        </View>
+        <View style={styles.mainBlock}>
+          {console.log('here1')}
+          <Image style={styles.image} source={{ uri: (photo === null ? defaultPictureURL : photo)}}></Image>
+          <Text style={[styles.mainText, {color: theme.textColor}]}>{name === null ? "username" : name}</Text>
+          <Text style={[styles.descText, {color: theme.textColor}]}>{email}</Text>
+          <Text style={[styles.descText, {color: theme.textColor}]}>{uid}</Text>
+        </View>
         <View
           style={{ alignItems: "center", flex: 1, justifyContent: "flex-end" }}
         >
@@ -36,7 +74,8 @@ export default function Settings({ navigation }) {
             <Text style={styles.buttonText}> Выход </Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      
+        </ScrollView>
     </View>
   );
 }
@@ -45,6 +84,24 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  mainBlock: {
+    alignItems: 'center',
+  },
+  mainText: {
+    fontSize: 16,
+    fontFamily: 'stolzl',
+    marginVertical: 5
+  },
+  descText: {
+    fontSize: 14,
+    fontFamily: 'stolzl_light',
+    marginVertical: 5
+  },
+  image: {
+    height: 200,
+    width: 200,
+    borderRadius: 999,
   },
   extiButton: {
     flexDirection: "row",

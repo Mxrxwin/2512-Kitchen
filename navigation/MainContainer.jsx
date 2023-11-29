@@ -2,21 +2,22 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { createStackNavigator } from "@react-navigation/stack";
-import { User, onAuthStateChanged } from "firebase/auth";
 
 import CustomDrawer from "./CustomDrawer";
 import themeContext from "../components/themeContext";
 
 import MainScreen from "../screens/mainScreen";
 import Account from "../screens/account";
-import Settings from "../screens/settings";
-import  FullPostScreen  from "../screens/FullPost";
+import FullPostScreen  from "../screens/FullPost";
 import Personal from "../screens/personal";
+import ChangePersonal from "../screens/ChangePersonal";
 import MenuScreen from "../screens/menuScreen";
 import StatisticScreen from "../screens/statisticScreen";
+import AddPost from "../screens/AddPost";
+import ChangePost from "../screens/ChangePost";
 
 import { useEffect, useState, useContext } from "react";
-import { FIREBASE_AUTH } from "../firebase.config";
+import userContext from "../components/userContext";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -29,21 +30,30 @@ const loadFonts = async () => {
   });
 };
 
+function InsideStackPersonal() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Personal"
+        component={Personal}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChangePersonal"
+        component={ChangePersonal}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function InsideStackLogin() {
-  const [user, setUser] = useState<User | null>(null);  
-
-  useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log(user);
-      setUser(user);
-    })
-  }, [])
-
+  const user = useContext(userContext);
   return (
     <InsideLayoutLogin.Navigator>
-      {user ? 
-      <InsideLayoutLogin.Screen name="LogedIn" component={Personal} options={{headerShown: false}}/> :  
-      <InsideLayoutLogin.Screen name="LogIn" component={Account} options={{headerShown: false}}/>}
+      {user 
+      ? <InsideLayoutLogin.Screen name="LogedIn" component={InsideStackPersonal} options={{headerShown: false}}/> 
+      : <InsideLayoutLogin.Screen name="LogIn" component={Account} options={{headerShown: false}}/>}
     </InsideLayoutLogin.Navigator>
   );
 }
@@ -59,6 +69,16 @@ function MyStack() {
       <Stack.Screen
         name="FullPost"
         component={FullPostScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddPost"
+        component={AddPost}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChangePost"
+        component={ChangePost}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
@@ -85,7 +105,7 @@ function MyDrawer() {
   return (
 
     <Drawer.Navigator
-      drawerContent={(props) => <CustomDrawer {...props} />}
+      drawerContent={(props) => <CustomDrawer {...props} navigation={props.navigation}/>}
       screenOptions={{
         headerShown: false,
         drawerActiveBackgroundColor: "#83E144",
@@ -133,6 +153,7 @@ function MyDrawer() {
           ),
         }}
       />
+{/*       <Drawer.Screen
       <Drawer.Screen
         name="Настройки"
         component={Settings}
@@ -141,7 +162,7 @@ function MyDrawer() {
             <Ionicons name="settings-outline" size={24} color={color} />
           ),
         }}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 }

@@ -8,53 +8,17 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { FIREBASE_AUTH } from "../firebase.config";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { Ionicons, Octicons } from "@expo/vector-icons";
+import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import themeContext from "../components/themeContext";
+import { SignIn, SignUp } from "../components/authFunctions";
 
 export default function PersonalInfoPage({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
   const [hidePass, setHidePass] = useState(false);
   const theme = useContext(themeContext);
-
-  const signIn = async () => {
-    setLoading(true);
-    try {
-      const responce = await signInWithEmailAndPassword(auth, email, password);
-      console.log(responce);
-    } catch (err) {
-      console.log(err);
-      alert("Sign in failed " + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signUp = async () => {
-    setLoading(true);
-    try {
-      const responce = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(responce);
-      alert("Check email.");
-    } catch (err) {
-      console.log(err);
-      alert("Sign up failed " + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <View style={[styles.page, { backgroundColor: theme.backgroundColor }]}>
@@ -66,7 +30,7 @@ export default function PersonalInfoPage({ navigation }) {
             style={{ alignItems: "flex-start", margin: 16 }}
             onPress={navigation.openDrawer}
           >
-            <Octicons name="three-bars" size={28} color={theme.textColor} />
+            <SimpleLineIcons name="menu" size={24} color={theme.textColor} />
           </TouchableOpacity>
         </View>
 
@@ -102,7 +66,7 @@ export default function PersonalInfoPage({ navigation }) {
             <View style={{ marginTop: 30 }}>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: "#83E144" }]}
-                onPress={signIn}
+                onPress={() => SignIn(email, password, setLoading)}
               >
                 <Text style={[styles.buttonText, { color: "white" }]}>
                   Login
@@ -111,7 +75,7 @@ export default function PersonalInfoPage({ navigation }) {
               <TouchableOpacity
                 style={styles.button}
                 title="Register"
-                onPress={signUp}
+                onPress={() => SignUp(email, password, setLoading)}
               >
                 <Text style={[styles.buttonText, { color: "#83E144" }]}>
                   Register

@@ -9,14 +9,14 @@ import {
   TextInput,
 } from "react-native";
 import { Octicons, FontAwesome, Ionicons } from "@expo/vector-icons";
-import axios from "axios";
 import themeContext from "../components/themeContext";
 import { Loading } from "../components/loading";
 import { FlatList } from "react-native-gesture-handler";
+import { listenToMenu } from "../components/photoUploadFunc";
 
 export default function StatisticScreen({ navigation }) {
-  const API_DATA = "https://6515c9e609e3260018c924d0.mockapi.io/menu";
   const [isLoading, setIsLoading] = useState(false);
+  const [items, setItems] = useState([]);
   const theme = useContext(themeContext);
   const [statistics, setStatistics] = useState({});
   const [keys, setKeys] = useState([]);
@@ -61,8 +61,7 @@ export default function StatisticScreen({ navigation }) {
   };
 
   const FetchDishes = (dishes) => {
-    setStatistics((prevStatistics) => {
-      const updatedStatistics = { ...prevStatistics };
+      const updatedStatistics = { ...statistics };
 
       dishes.forEach((element) => {
         if (!valuesToExclude.includes(element)) {
@@ -71,31 +70,23 @@ export default function StatisticScreen({ navigation }) {
           } else {
             updatedStatistics[element] = 1;
           }
-        }
+      };
       });
-
       setStatistics(updatedStatistics);
-    });
-  };
+    };
 
   const FetchPosts = () => {
-    setIsLoading(true);
-    axios
-      .get(API_DATA)
-      .then(({ data }) => {
-        setStatistics({});
-        data.forEach((element) => {
-          FetchDishes(element.dishes);
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("Ошибка при получении статей");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    listenToMenu(setItems);
   };
+
+  
+  React.useEffect(() => {
+    setStatistics({});
+    items.forEach((element) => {
+      FetchDishes(element.dishes);
+    });
+  }, [items])
+
 
   React.useEffect(FetchPosts, []);
 
@@ -127,7 +118,7 @@ export default function StatisticScreen({ navigation }) {
     setSorting();
   }, [statistics, sortType]);
 
-  if (isLoading) {
+  if (Object.keys(statistics) === 0) {
     return <Loading />;
   }
 

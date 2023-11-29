@@ -2,30 +2,42 @@ import React, { useContext } from "react";
 import {
   View,
   Text,
-  ImageBackground,
   ScrollView,
-  Animated,
+  BackHandler 
 } from "react-native";
-import axios from "axios";
 import { Loading } from "../components/loading";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
-import { MotiView, useDynamicAnimation } from "moti";
+import { useDynamicAnimation } from "moti";
 import themeContext from "../components/themeContext";
 import { PictureScroll } from "../components/picture";
+import { FetchDish, FetchImages } from "../components/photoUploadFunc";
+import TopAnimatedHeader from "../components/topAnimHeader";
+import userContext from "../components/userContext";
+import { CheckUserAdmin } from "../components/authFunctions";
 
 export default FullPostScreen = ({ route, navigation }) => {
   const [yValue, setYValue] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [images, setImages] = React.useState([]);
   const [data, setData] = React.useState([]);
   const [CPFCP, setCPFCP] = React.useState([]);
-  const [ingredients, setIngredients] = React.useState({});
-  const [ingredientsKey, setIngredientsKey] = React.useState([]);
-  const { id, title } = route.params;
+  const [ingredients, setIngredients] = React.useState([]);
+  const { id } = route.params;
   const theme = useContext(themeContext);
-  const routeToPictures = "../assets/images/catalog/";
+	const user = useContext(userContext);
+	const [ifUserAdmin, setIfUserAdmin] = React.useState(false);
+  
+  React.useEffect(() => {
+    if (user !== null) {
+			CheckUserAdmin(user, setIfUserAdmin);
+		} else {
+      setIfUserAdmin(false);
+    }
+  }, [user])
 
+  
   const animation = useDynamicAnimation(() => {
     return {
       width: "100%",
@@ -33,37 +45,41 @@ export default FullPostScreen = ({ route, navigation }) => {
     };
   });
 
-  React.useEffect(() => {
-    navigation.setOptions({
-      title,
-    });
-    axios
-      .get("https://6515c9e609e3260018c924d0.mockapi.io/Article/" + id)
-      .then(({ data }) => {
-        setData(data);
-        setCPFCP(data.CPFCP);
-        setIngredients(data.Ingredients);
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("Ошибка при получении статей");
-      })
-      .finally(() => {
-        setIsLoading(false);
+
+    React.useEffect(() => {
+      navigation.setOptions({
+        id
       });
-  }, []);
+      FetchData(id);
 
-  if (isLoading) {
-    return (
-      <View>
-        <Loading />
-      </View>
-    );
-  }
+      let hasNavigated;
+      const handleBackButton = () => {
+        if (!hasNavigated) {
+          navigation.navigate("Home");
+          hasNavigated = true;
+          return true;
+        }
+        return false;
+      };
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+      return () => {
+        backHandler.remove(); 
+      };
+    }, [])
 
-  React.useEffect(() => {
-    setIngredientsKey(Object.keys(ingredients));
-  }, [ingredients]);
+    async function FetchData(id) {
+      const data = await FetchDish(id);
+      setImages(await FetchImages(id));
+      setData(data[0]);
+      setCPFCP(data[0].CPFCP);
+      setIngredients(data[0].Ingredients);
+    }
+
+
+    if (ingredients.length === 0) {
+      return <Loading />;
+    }
+  
 
   return (
     <View style={{ flex: 1, width: "100%", height: 450 }}>
@@ -85,7 +101,8 @@ export default FullPostScreen = ({ route, navigation }) => {
             setYValue(e.nativeEvent.contentOffset.y.toFixed(0));
           }}
         >
-          <View style={{zIndex: 2}}>
+          <View style={{zIndex: 2 , width: '20%'}}>
+
             <TouchableOpacity style={{ padding: 20}}>
               <AntDesign
                 name="arrowleft"
@@ -96,16 +113,15 @@ export default FullPostScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
           
-          <View style={{ position: "absolute", zIndex: 1 }}>
-            <PictureScroll
-              pictures={[
-                ["https://i.ibb.co/FgGG4Hy/photo-2022-11-15-22-14-05.jpg"],
-                ["https://s8d5.turboimg.net/t1/95061123_2512.jpg"],
-              ]}
+          <View style={{ position: "absolute", zIndex: 1}}>
+            <PictureScroll 
+              pictures={images} deletePosibitity={false} changePosibility={ifUserAdmin} navigation={navigation} dishId={id}
+
             />
           </View>
 
-          <MotiView style={{ width: "100%", height: 300 }}></MotiView>
+          <View style={{ width: "100%", height: 300 }}></View>
+
           <View
             style={{
               backgroundColor: theme.backgroundColor,
@@ -127,10 +143,11 @@ export default FullPostScreen = ({ route, navigation }) => {
               >
                 Ингредиенты:{" "}
               </Text>
-              {ingredientsKey.map((item, index) => (
+              {ingredients.map((item, index) => (
                 <View key={index}>
-                  <Text style={styles.Ingredients}>
-                    {item} : {ingredients[item]}
+                  <Text style={[styles.Ingredients, {color: theme.textColor}]}>
+                    {item}
+
                   </Text>
                 </View>
               ))}
@@ -153,47 +170,7 @@ export default FullPostScreen = ({ route, navigation }) => {
             </View>
           </View>
         </ScrollView>
-        <MotiView
-          from={{ translateY: -80 }}
-          animate={{ translateY: yValue > 380 ? 0 : -80 }}
-          transition={{ type: "timing", duration: "300" }}
-          style={{
-            width: "100%",
-            height: 80,
-            position: "absolute",
-            top: 0,
-            elevation: 6,
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: theme.headerColor,
-          }}
-        >
-          <TouchableOpacity style={{ padding: 20, marginTop: 10 }}>
-            <AntDesign
-              name="arrowleft"
-              size={35}
-              color={theme.textColor}
-              onPress={() => navigation.navigate("Home")}
-            />
-          </TouchableOpacity>
-          <MotiView
-            from={{ translateX: -60 }}
-            animate={{ translateX: yValue > 380 ? 0 : -50 }}
-            transition={{ type: "timing", duration: "300" }}
-            style={{ marginTop: 10 }}
-          >
-            <Text
-              style={{
-                marginTop: 10,
-                fontSize: 24,
-                fontFamily: "stolzl",
-                color: theme.textColor,
-              }}
-            >
-              {title}
-            </Text>
-          </MotiView>
-        </MotiView>
+        <TopAnimatedHeader navigation={navigation} yValue={yValue} title={data.title}/>
       </View>
     </View>
   );

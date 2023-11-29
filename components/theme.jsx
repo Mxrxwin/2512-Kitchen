@@ -2,8 +2,8 @@ const theme = {
     light: {
         theme: 'light',
         textColor: '#333',
-        backgroundColor: '#F9F9F9',
-        searchColor: '#F9F9F9',
+        backgroundColor: 'white',
+        searchColor: 'white',
         searchPlaceholderColor: "#5555",
         headerColor: "white"
     },

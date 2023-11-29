@@ -4,7 +4,7 @@ import { StyleSheet, View, Animated, useWindowDimensions} from "react-native";
 export const PicturePaginator = ({data, scrollX}) => {
     const {width} = useWindowDimensions();
     return (
-        <View style={{flexDirection: 'row', height: 0, zIndex: 2, position: 'absolute', marginTop: 360}}>
+        <View style={{flexDirection: 'row', height: 0, zIndex: 2, position: 'absolute', marginTop: 360, alignSelf: 'center'}}>       
             {data.map((_, i) => {
                 const inputRange = [(i-1) * width, i *width, (i+1) * width];
 

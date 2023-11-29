@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   PostTitle: {
     fontSize: 15,
     fontFamily: "stolzl",
-    marginStart: 10
+    marginStart: 10,
   },
   PostDetails: {
     marginTop: 10,
