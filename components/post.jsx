@@ -1,22 +1,29 @@
 import { useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { Image, Text, View } from 'react-native';
 import themeContext from './themeContext';
- 
+import { PixelRatio } from 'react-native';
+
 export const Post = ({title, imageUrl, recipe, CPFCP}) => 
 {
+  const fontScale = PixelRatio.getFontScale();
+  const windowWidth = useWindowDimensions().width;
   const theme = useContext(themeContext);
     return  (
     <View style={styles.PostView} >
         <Image style={styles.PostImage} source={{ uri: imageUrl}}/>
         <View style= {styles.PostDetails}> 
             <Text style= {[styles.PostTitle, {color: theme.textColor}]}> {title} </Text>
-            <Text style= {[styles.PostData , {color: theme.textColor}]}> {recipe.slice(0, 30)}... </Text>
-            <View style={{flexDirection: "row"}}>
+            <Text style= {[styles.PostData , {color: theme.textColor, width: windowWidth - 120 }]}
+              numberOfLines={1}
+            > {recipe}... 
+            </Text>
+            <View style={{flexDirection: "row", justifyContent: 'space-between', width: windowWidth - 120}}>
               {CPFCP.map((item, index) => (
-                <View style={{flexDirection: "row", marginEnd: 5}} key= {index} >
-                  <Text style= {[styles.PostCPFCPTitle, {color: theme.textColor}]}> {'КБЖУ₽'[index]}:</Text>
-                  <Text style= {[styles.PostCPFCPText, {color: theme.textColor}]}> {item}</Text>
+                <View style={{flexDirection: "row"}} key={index} >
+                  <Text style={{color: theme.textColor, fontSize: fontScale <= 1.1 ? 15 : 14 - (fontScale - 1) * 12, fontFamily: 'stolzl'}}>
+                    {" "}{'КБЖУ₽'[index]}: <Text style={{fontFamily: 'stolzl_light'}}>{item} </Text>
+                  </Text>
                 </View>
               ))}
             </View>
@@ -51,12 +58,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'stolzl_light'
   },
-  PostCPFCPText: {
-    fontSize: 15,
-    fontFamily: 'stolzl_light'
-  },
-  PostCPFCPTitle: {
-    fontSize: 15,
-    fontFamily: 'stolzl'
-  }
 })

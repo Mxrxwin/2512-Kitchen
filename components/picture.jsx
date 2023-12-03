@@ -92,7 +92,7 @@ export const PictureScroll = ({
 
 const styles = StyleSheet.create({
 	image: {
-		height: 418,
+		height: 420,
 		zIndex: 2,
 	},
 	deleteButton: {

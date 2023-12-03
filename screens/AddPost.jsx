@@ -6,6 +6,7 @@ import {
 	TouchableOpacity,
 	TextInput,
 	ScrollView,
+	useWindowDimensions
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import themeContext from "../components/themeContext";
@@ -26,6 +27,8 @@ export default function AddPost({ route, navigation }) {
 	const [countIngr, setCountInrg] = useState(3);
 	const [leftScreen, setLeftScreen] = useState(true);
 	const leftScreenRef = useRef(leftScreen);
+	const windowHeight = useWindowDimensions().height;
+	const [picHeight, setPicHeight] = useState(0);
 
 	const [image, setImage] = useState("");
 	const [addedImage, setAddedImage] = useState([]);
@@ -43,6 +46,12 @@ export default function AddPost({ route, navigation }) {
 	const [CPFCP, setCPFCP] = useState(["", "", "", "", ""]);
 	const [ingredients, setIngredients] = useState([]);
 
+	const handlePicLayout = (event) => {
+		const { height } = event.nativeEvent.layout;
+		console.log(windowHeight, height, windowHeight - height);
+		setPicHeight(height);
+	  };
+	
 	useEffect(() => {
 		if (image !== "") {
 			const imageData = { createdAt: image[1], url: image[0] };
@@ -128,7 +137,7 @@ export default function AddPost({ route, navigation }) {
 			<KeyboardAwareScrollView style={{ flex: 1 }}>
 				<View style={{ flex: 1, zIndex: 2 }}>
 					<ScrollView
-						style={{ flex: 1 }}
+						style={{ flex: 1}}
 						onScroll={(e) => {
 							if (e.nativeEvent.contentOffset.y.toFixed(0) > 30) {
 								animation.animateTo({
@@ -161,18 +170,19 @@ export default function AddPost({ route, navigation }) {
 								/>
 							</TouchableOpacity>
 						</View>
-						<View style={styles.images}>
+						<View style={styles.images} onLayout={handlePicLayout}>
 							<PictureScroll
 								pictures={files}
 								deletePosibitity={true}
 								setImage={setImage}
 								setFiles={setFiles}
 							/>
+							
 						</View>
 						<View
 							style={[
 								styles.intupBlock,
-								{ backgroundColor: theme.backgroundColor },
+								{ backgroundColor: theme.backgroundColor},
 							]}
 						>
 							<TextInput
@@ -234,16 +244,17 @@ export default function AddPost({ route, navigation }) {
 									)
 								)}
 							</View>
-							<View style={{ height: 80 }}></View>
+							<TouchableOpacity
+								style={[styles.button, { backgroundColor: "#83E144", 
+								marginBottom: 35}]}
+								onPress={() => Submit()}
+							>
+								<Text style={[styles.buttonText, { color: "white" }]}>Принять</Text>
+							</TouchableOpacity>
 						</View>
 					</ScrollView>
 				</View>
-				<TouchableOpacity
-					style={[styles.button, { backgroundColor: "#83E144" }]}
-					onPress={() => Submit()}
-				>
-					<Text style={[styles.buttonText, { color: "white" }]}>Принять</Text>
-				</TouchableOpacity>
+
 			</KeyboardAwareScrollView>
 		</View>
 	);
@@ -275,7 +286,7 @@ const styles = StyleSheet.create({
 		flexDirection: "column",
 		marginVertical: 10,
 		marginHorizontal: 20,
-		marginBottom: 28,
+		marginBottom: 25,
 	},
 	images: {
 		position: "absolute",
@@ -299,9 +310,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderWidth: 2,
 		borderColor: "#83E144",
-		position: "absolute",
 		alignSelf: "center",
-		bottom: 30,
 		zIndex: 2,
 	},
 	buttonText: {

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
 	View,
 	StyleSheet,
@@ -14,7 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { EventRegister } from "react-native-event-listeners";
-import themeContext from "../components/themeContext";
+import themeContext, { getThemePreference, saveThemePreference } from "../components/themeContext";
 import Constants from "expo-constants";
 import { getAuth } from "firebase/auth";
 import { CheckUserAdmin } from "../components/authFunctions";
@@ -24,6 +24,7 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 export default CustomDrawer = (props) => {
   const navigation = useNavigation();
 	const [darkMode, setDarkMode] = useState(false);
+	getThemePreference(setDarkMode);
 	const theme = useContext(themeContext);
 	const userData = getAuth();
 	const { photoURL, displayName } =
@@ -31,7 +32,7 @@ export default CustomDrawer = (props) => {
 			? { undefined, undefined }
 			: userData.currentUser;
 	const [ifAdmin, setIfAdmin] = useState(false);
-  let toggle = [0,0];
+  	let toggle = [0,0];
 	CheckUserAdmin(userData.currentUser, setIfAdmin);
 	const defaultPictureURL =
 		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
@@ -43,8 +44,14 @@ export default CustomDrawer = (props) => {
 			SwitchTheme();
 		});
 
+	useEffect(() => {
+		console.log(darkMode);
+	}, [darkMode])
+		
+		
 	const SwitchTheme = () => {
 		setDarkMode(!darkMode);
+		saveThemePreference(!darkMode);
 		EventRegister.emit("ChangeTheme", [!darkMode, toggle]);
 	};
 

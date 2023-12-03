@@ -5,12 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "userInterfaceStyle": "automatic",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -30,7 +25,10 @@
     },
     "extra": {
       "eas": {
-        "projectId": "b725932e-0495-4507-ba7b-5b18a8c3bff7"
+        "projectId": "b725932e-0495-4507-ba7b-5b18a8c3bff7",
+        "androidStatusBar": {
+          "translucent": false
+        }
       }
     }
   }

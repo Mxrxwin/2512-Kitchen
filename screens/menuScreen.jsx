@@ -258,7 +258,7 @@ export default function MenuScreen({ navigation }) {
 						color={theme.searchPlaceholderColor}
 					/>
 					<TextInput
-						placeholder="Search   "
+						placeholder="Search        "
 						placeholderTextColor={theme.searchPlaceholderColor}
 						clearButtonMode="always"
 						autoCapitalize="none"
