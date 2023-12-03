@@ -147,7 +147,7 @@ export default function StatisticScreen({ navigation }) {
               color={theme.searchPlaceholderColor}
             />
             <TextInput
-              placeholder="Search   "
+              placeholder="Search        "
               placeholderTextColor={theme.searchPlaceholderColor}
               clearButtonMode="always"
               autoCapitalize="none"

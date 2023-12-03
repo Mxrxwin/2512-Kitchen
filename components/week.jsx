@@ -5,7 +5,7 @@ import themeContext from "./themeContext";
 import { Octicons } from '@expo/vector-icons';
 
 export const Week = ({ title, dishes, dateStart, dateEnd,id }) => {
-  const weekday = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"]
+  const weekday = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
   const theme = useContext(themeContext);
 
   return (
@@ -19,7 +19,7 @@ export const Week = ({ title, dishes, dateStart, dateEnd,id }) => {
       <View style={[styles.PostDetails, { color: theme.textColor }]}>
           {dishes.map((element, index) => (
             <View key={index} style={{flexDirection: 'row'}}>
-              <Text style={[styles.PostData, { color: theme.textColor, width: '8%'}]}>{weekday[index]}</Text>
+              <Text style={[styles.PostData, { color: theme.textColor, width: "8%"}]}>{weekday[index]}</Text>
               <Text style={[styles.PostData, { color: theme.textColor }]}>—  {element}</Text>
             </View>
           ))}
@@ -52,11 +52,9 @@ const styles = StyleSheet.create({
   PostData: {
     fontSize: 16,
     fontFamily: "stolzl",
-    marginEnd: 10
   },
   PostDate: {
     fontSize: 16,
     fontFamily: "stolzl_light",
-    marginEnd: 10
   },
 });

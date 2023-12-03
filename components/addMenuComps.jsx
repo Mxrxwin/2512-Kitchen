@@ -88,7 +88,7 @@ export function MenuInputBlock(id) {
 				{weekday.map((element, index) => (
 					<View key={index} style={{ flexDirection: "row", alignItems: 'center'}}>
 						<Text
-							style={[styles.PostData, { color: theme.textColor, width: "7%" }]}
+							style={[styles.PostData, { color: theme.textColor, width: "8%" }]}
 						>
 							{element} 
 						</Text>

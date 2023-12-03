@@ -1,9 +1,10 @@
+import 'react-native-gesture-handler';
 import React, { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
 import MainContainer from "./navigation/MainContainer";
 import { NavigationContainer } from "@react-navigation/native";
 import theme from "./components/theme";
-import themeContext from "./components/themeContext";
+import themeContext, { getThemePreference, saveThemePreference } from "./components/themeContext";
 import { EventRegister } from "react-native-event-listeners";
 import userContext from "./components/userContext";
 import { onAuthStateChanged } from "firebase/auth";
@@ -11,6 +12,7 @@ import { FIREBASE_AUTH } from "./firebase.config";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
+  getThemePreference(setDarkMode);
   const [user, setUser] = React.useState(null);
   const ref = useRef(null);  
 
@@ -18,6 +20,7 @@ export default function App() {
     const listenerTheme = EventRegister.addEventListener(
       "ChangeTheme",
       (data, toggle) => {
+        saveThemePreference(data[0]);
         setDarkMode(data[0]);
         toggle = data[1];
       }

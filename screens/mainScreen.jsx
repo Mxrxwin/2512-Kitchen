@@ -48,7 +48,6 @@ export default function MenuScreen({ navigation }) {
 		setFilteredItems([]);
 		listenToDishes(setItems);
 		listenToDishes(setFilteredItems);
-		
 	}
 
 	useEffect(() => {
@@ -78,62 +77,62 @@ export default function MenuScreen({ navigation }) {
 		switch (sortType[0]) {
 			case "Название":
 				if (sortType[1]) {
-					newItems.sort((a,b) => b.title.localeCompare(a.title));
+					newItems.sort((a, b) => b.title.localeCompare(a.title));
 					setItems(newItems);
 					return;
 				}
-				newItems.sort((a,b) => a.title.localeCompare(b.title));
+				newItems.sort((a, b) => a.title.localeCompare(b.title));
 				setItems(newItems);
-			break;
+				break;
 			case "Калории":
 				if (sortType[1]) {
-					newItems.sort((a,b) => parseInt(a.CPFCP[0]) - parseInt(b.CPFCP[0]));
+					newItems.sort((a, b) => parseInt(a.CPFCP[0]) - parseInt(b.CPFCP[0]));
 					setItems(newItems);
 					return;
 				}
-				newItems.sort((a,b) => parseInt(b.CPFCP[0]) - parseInt(a.CPFCP[0]));
+				newItems.sort((a, b) => parseInt(b.CPFCP[0]) - parseInt(a.CPFCP[0]));
 				setItems(newItems);
-			break;
+				break;
 			case "Белки":
 				if (sortType[1]) {
-					newItems.sort((a,b) => parseInt(a.CPFCP[1]) - parseInt(b.CPFCP[1]));
+					newItems.sort((a, b) => parseInt(a.CPFCP[1]) - parseInt(b.CPFCP[1]));
 					setItems(newItems);
 					return;
 				}
-				newItems.sort((a,b) => parseInt(b.CPFCP[1]) - parseInt(a.CPFCP[1]));
+				newItems.sort((a, b) => parseInt(b.CPFCP[1]) - parseInt(a.CPFCP[1]));
 				setItems(newItems);
-			break;
+				break;
 			case "Жиры":
 				if (sortType[1]) {
-					newItems.sort((a,b) => parseInt(a.CPFCP[2]) - parseInt(b.CPFCP[2]));
+					newItems.sort((a, b) => parseInt(a.CPFCP[2]) - parseInt(b.CPFCP[2]));
 					setItems(newItems);
 					return;
 				}
-				newItems.sort((a,b) => parseInt(b.CPFCP[2]) - parseInt(a.CPFCP[2]));
+				newItems.sort((a, b) => parseInt(b.CPFCP[2]) - parseInt(a.CPFCP[2]));
 				setItems(newItems);
-			break;
+				break;
 			case "Углеводы":
 				if (sortType[1]) {
-					newItems.sort((a,b) => parseInt(a.CPFCP[3]) - parseInt(b.CPFCP[3]));
+					newItems.sort((a, b) => parseInt(a.CPFCP[3]) - parseInt(b.CPFCP[3]));
 					setItems(newItems);
 					return;
 				}
-				newItems.sort((a,b) => parseInt(b.CPFCP[3]) - parseInt(a.CPFCP[3]));
+				newItems.sort((a, b) => parseInt(b.CPFCP[3]) - parseInt(a.CPFCP[3]));
 				setItems(newItems);
-			break;	
+				break;
 			case "Цена":
 				if (sortType[1]) {
-					newItems.sort((a,b) => parseInt(a.CPFCP[4]) - parseInt(b.CPFCP[4]));
+					newItems.sort((a, b) => parseInt(a.CPFCP[4]) - parseInt(b.CPFCP[4]));
 					setItems(newItems);
 					return;
 				}
-				newItems.sort((a,b) => parseInt(b.CPFCP[4]) - parseInt(a.CPFCP[4]));
+				newItems.sort((a, b) => parseInt(b.CPFCP[4]) - parseInt(a.CPFCP[4]));
 				setItems(newItems);
-			break;		
+				break;
 			default:
-			break;
+				break;
 		}
-	}
+	};
 
 	useEffect(() => {
 		sorting(sortType);
@@ -145,12 +144,6 @@ export default function MenuScreen({ navigation }) {
 
 	function animation(to) {
 		to === 1 && setShowSort(true);
-		if (to) {
-			StatusBar.setBackgroundColor("rgba(0, 0, 0, 0.2)", true);
-
-		} else {
-			StatusBar.setBackgroundColor("rgba(0, 0, 0, 0)", true);
-		}
 		Animated.timing(animatedColorValue, {
 			toValue: to,
 			duration: 100,
@@ -177,6 +170,10 @@ export default function MenuScreen({ navigation }) {
 					></Animated.View>
 				</View>
 			</Modal>
+			<StatusBar
+				backgroundColor={showSort ? "rgba(0, 0, 0, 0.2)" : "rgba(0, 0, 0, 0)"}
+				translucent={true}
+			/>
 			<BottomSheet
 				visible={showSort}
 				close={(prop) => setDarker(prop)}
@@ -184,7 +181,12 @@ export default function MenuScreen({ navigation }) {
 			/>
 			<SafeAreaView style={{ flex: 1 }}>
 				<View
-					style={{ flexDirection: "row", alignItems: "center", marginTop: 27 }}
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-around",
+						alignItems: "center",
+						marginTop: 25,
+					}}
 				>
 					<TouchableOpacity
 						style={{ alignItems: "flex-start", margin: 16 }}
@@ -200,7 +202,7 @@ export default function MenuScreen({ navigation }) {
 							color={theme.searchPlaceholderColor}
 						/>
 						<TextInput
-							placeholder="Search   "
+							placeholder="Search        "
 							placeholderTextColor={theme.searchPlaceholderColor}
 							clearButtonMode="always"
 							autoCapitalize="none"
