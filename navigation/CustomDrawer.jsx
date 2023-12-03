@@ -18,6 +18,7 @@ import themeContext, {
 	getThemePreference,
 	saveThemePreference,
 } from "../components/themeContext";
+import themeContext, { getThemePreference, saveThemePreference } from "../components/themeContext";
 import Constants from "expo-constants";
 import { getAuth } from "firebase/auth";
 import { CheckUserAdmin } from "../components/authFunctions";
@@ -35,7 +36,7 @@ export default CustomDrawer = (props) => {
 			? { undefined, undefined }
 			: userData.currentUser;
 	const [ifAdmin, setIfAdmin] = useState(false);
-	let toggle = [0, 0];
+  	let toggle = [0,0];
 	CheckUserAdmin(userData.currentUser, setIfAdmin);
 	const defaultPictureURL =
 		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
