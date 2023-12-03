@@ -2,10 +2,10 @@ const theme = {
     light: {
         theme: 'light',
         textColor: '#333',
-        backgroundColor: 'white',
-        searchColor: 'white',
+        backgroundColor: '#FDFDFD',
+        searchColor: '#FDFDFD',
         searchPlaceholderColor: "#5555",
-        headerColor: "white"
+        headerColor: "#FDFDFD"
     },
     dark: {
         theme: 'black',

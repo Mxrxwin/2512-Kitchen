@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
-  SafeAreaView,
+  BackHandler,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -28,6 +28,24 @@ export default function Personal({ navigation }) {
       setNewPhoto(userData.photoURL);
     })
   );
+
+  useEffect(() => {
+    let hasNavigated;
+    const handleBackButton = () => {
+      if (!hasNavigated) {
+        navigation.navigate("Home");
+        hasNavigated = true;
+        return true;
+      }
+      return false;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return () => {
+      backHandler.remove(); 
+    };
+  })
+
+  
 
   return (
     <View style={[styles.page, { backgroundColor: theme.backgroundColor }]}>

@@ -14,7 +14,8 @@ import {
 import { Ionicons, Octicons } from "@expo/vector-icons";
 import themeContext from "./themeContext";
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { height: WINDOW_HEIGHT } = Dimensions.get("window");
+
 
 const BottomSheet = ({ visible, close, func }) => {
 	const names = ["Название", "Калории", "Белки", "Жиры", "Углеводы", "Цена"];
@@ -39,7 +40,7 @@ const BottomSheet = ({ visible, close, func }) => {
 
 	const interpolatedTranslateY = translateY.interpolate({
 		inputRange: [0, 1],
-		outputRange: [0, -SCREEN_HEIGHT / 2.5],
+		outputRange: [0, -WINDOW_HEIGHT / 2.5],
 	});
 
 	function getParams(name, index) {
@@ -114,10 +115,10 @@ const BottomSheet = ({ visible, close, func }) => {
 
 const styles = StyleSheet.create({
 	bottomSheetContainer: {
-		height: SCREEN_HEIGHT,
+		height: WINDOW_HEIGHT / 2.5 + 50,
 		width: "100%",
 		position: "absolute",
-		top: SCREEN_HEIGHT,
+		top: WINDOW_HEIGHT,
 		borderRadius: 50,
 	},
 	page: {
@@ -127,8 +128,8 @@ const styles = StyleSheet.create({
 		marginTop: -5,
 	},
 	block: {
+		height: (WINDOW_HEIGHT / 2.5 - 70 ) / 6,
 		alignItems: "center",
-		height: 45,
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
@@ -137,13 +138,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
 		fontSize: 18,
 		fontFamily: "stolzl",
-	},
-	line: {
-		width: 75,
-		height: 4,
-		backgroundColor: "grey",
-		alignSelf: "center",
-		marginTop: 15,
 	},
 });
 
