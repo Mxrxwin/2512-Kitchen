@@ -14,10 +14,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { EventRegister } from "react-native-event-listeners";
-import themeContext, {
-	getThemePreference,
-	saveThemePreference,
-} from "../components/themeContext";
 import themeContext, { getThemePreference, saveThemePreference } from "../components/themeContext";
 import Constants from "expo-constants";
 import { getAuth } from "firebase/auth";
