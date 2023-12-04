@@ -19,7 +19,8 @@ export default function Personal({ navigation }) {
   const [userData, setUserData] = useState(getAuth().currentUser);
   const [name, setNewName]= useState(userData.displayName);
   const [photo, setNewPhoto]= useState(userData.photoURL);
-  const { email, uid, displayName, photoURL } = userData;
+  const { email, uid, metadata, photoURL } = userData;
+  console.log(userData.metadata.createdAt);
   const defaultPictureURL = "https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
   
   useFocusEffect(
@@ -28,6 +29,11 @@ export default function Personal({ navigation }) {
       setNewPhoto(userData.photoURL);
     })
   );
+
+  const getTime = (unix) => {
+    const date = new Date(parseInt(unix));
+    return date.toLocaleString();
+  }
 
   useEffect(() => {
     let hasNavigated;
@@ -78,6 +84,7 @@ export default function Personal({ navigation }) {
           <Text style={[styles.mainText, {color: theme.textColor}]}>{name === null ? "username" : name}</Text>
           <Text style={[styles.descText, {color: theme.textColor}]}>{email}</Text>
           <Text style={[styles.descText, {color: theme.textColor}]}>{uid}</Text>
+          <Text style={[styles.descText, {color: theme.textColor}]}>created: {getTime(metadata.createdAt)}</Text>
         </View>
         <View
           style={{ alignItems: "center", flex: 1, justifyContent: "flex-end" }}

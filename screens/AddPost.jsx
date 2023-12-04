@@ -113,11 +113,12 @@ export default function AddPost({ route, navigation }) {
 			recipe === "" ||
 			CPFCP.includes("") ||
 			ingredients.length == 0 ||
-			ingredients.includes("") 
+			ingredients.includes("")  ||
+			!CPFCP.every((element) => /^\d+$/.test(element))
 			) {
-			alert("Вы заполнили не все поля");
+			alert("Вы заполнили не все поля или в КБЖУЦ не цифры");
 		} else {
-			leftScreenRef.current = false;
+ 			leftScreenRef.current = false;
 			SaveDishRecond(
 				title,
 				recipe,
@@ -125,10 +126,11 @@ export default function AddPost({ route, navigation }) {
 				countDishes,
 				ingredients,
 				CPFCP
-			);
+			); 
 			navigation.navigate("FullPost", {
 				id: countDishes
 			  });
+			  
 		}
 	}
 

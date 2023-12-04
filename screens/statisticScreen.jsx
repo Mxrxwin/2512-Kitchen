@@ -63,7 +63,8 @@ export default function StatisticScreen({ navigation }) {
   const FetchDishes = (dishes) => {
       const updatedStatistics = { ...statistics };
 
-      dishes.forEach((element) => {
+      dishes.forEach((elementStr) => {
+        const element = elementStr.trimRight();
         if (!valuesToExclude.includes(element)) {
           if (updatedStatistics[element]) {
             updatedStatistics[element] += 1;

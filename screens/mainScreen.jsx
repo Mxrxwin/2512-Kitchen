@@ -24,6 +24,8 @@ import BottomSheet from "../components/bottomSheet";
 export default function MenuScreen({ navigation }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [items, setItems] = useState([]);
+	const [loadItems, setLoadItems] = useState([])
+	const itemLength = useRef(0);
 	const [filteredItems, setFilteredItems] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const theme = useContext(themeContext);
@@ -44,11 +46,16 @@ export default function MenuScreen({ navigation }) {
 	}, [user]);
 
 	function FetchPosts() {
-		setItems([]);
+		setLoadItems([]);
 		setFilteredItems([]);
-		listenToDishes(setItems);
+		listenToDishes(setLoadItems);
 		listenToDishes(setFilteredItems);
 	}
+
+	useEffect(() => {
+		const newItems = sorting(loadItems, sortType);
+		setItems(newItems);
+	}, [loadItems]) 
 
 	useEffect(() => {
 		FetchPosts();
@@ -72,70 +79,59 @@ export default function MenuScreen({ navigation }) {
 		setSortType(["Название", 0]);
 	};
 
-	const sorting = (sortType) => {
+	const sorting = (items, sortType) => {
 		let newItems = [...items];
 		switch (sortType[0]) {
 			case "Название":
 				if (sortType[1]) {
 					newItems.sort((a, b) => b.title.localeCompare(a.title));
-					setItems(newItems);
-					return;
+					return newItems;
 				}
 				newItems.sort((a, b) => a.title.localeCompare(b.title));
-				setItems(newItems);
-				break;
+				return newItems;
 			case "Калории":
 				if (sortType[1]) {
 					newItems.sort((a, b) => parseInt(a.CPFCP[0]) - parseInt(b.CPFCP[0]));
-					setItems(newItems);
-					return;
+					return newItems;
 				}
 				newItems.sort((a, b) => parseInt(b.CPFCP[0]) - parseInt(a.CPFCP[0]));
-				setItems(newItems);
-				break;
+				return newItems;
 			case "Белки":
 				if (sortType[1]) {
 					newItems.sort((a, b) => parseInt(a.CPFCP[1]) - parseInt(b.CPFCP[1]));
-					setItems(newItems);
-					return;
+					return newItems;
 				}
 				newItems.sort((a, b) => parseInt(b.CPFCP[1]) - parseInt(a.CPFCP[1]));
-				setItems(newItems);
-				break;
+				return newItems;
 			case "Жиры":
 				if (sortType[1]) {
 					newItems.sort((a, b) => parseInt(a.CPFCP[2]) - parseInt(b.CPFCP[2]));
-					setItems(newItems);
-					return;
+					return newItems;
 				}
 				newItems.sort((a, b) => parseInt(b.CPFCP[2]) - parseInt(a.CPFCP[2]));
-				setItems(newItems);
-				break;
+				return newItems;
 			case "Углеводы":
 				if (sortType[1]) {
 					newItems.sort((a, b) => parseInt(a.CPFCP[3]) - parseInt(b.CPFCP[3]));
-					setItems(newItems);
-					return;
+					return newItems;
 				}
 				newItems.sort((a, b) => parseInt(b.CPFCP[3]) - parseInt(a.CPFCP[3]));
-				setItems(newItems);
-				break;
+				return newItems;
 			case "Цена":
 				if (sortType[1]) {
 					newItems.sort((a, b) => parseInt(a.CPFCP[4]) - parseInt(b.CPFCP[4]));
-					setItems(newItems);
-					return;
+					return newItems;
 				}
 				newItems.sort((a, b) => parseInt(b.CPFCP[4]) - parseInt(a.CPFCP[4]));
-				setItems(newItems);
-				break;
+				return newItems;
 			default:
 				break;
 		}
 	};
 
 	useEffect(() => {
-		sorting(sortType);
+		const newItems = sorting(items, sortType);
+		setItems(newItems);
 	}, [sortType]);
 
 	useEffect(() => {
