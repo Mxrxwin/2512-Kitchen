@@ -15,6 +15,8 @@ import MenuScreen from "../screens/menuScreen";
 import StatisticScreen from "../screens/statisticScreen";
 import AddPost from "../screens/AddPost";
 import ChangePost from "../screens/ChangePost";
+import UsersScreen from "../screens/UsersScreen";
+import UnselfPersonal from "../screens/unselfPersonal";
 
 import { useEffect, useState, useContext } from "react";
 import userContext from "../components/userContext";
@@ -22,6 +24,7 @@ import userContext from "../components/userContext";
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const InsideLayoutLogin = createStackNavigator();
+const InsidePersonalLayout = createStackNavigator();
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -55,6 +58,15 @@ function InsideStackLogin() {
       ? <InsideLayoutLogin.Screen name="LogedIn" component={InsideStackPersonal} options={{headerShown: false}}/> 
       : <InsideLayoutLogin.Screen name="LogIn" component={Account} options={{headerShown: false}}/>}
     </InsideLayoutLogin.Navigator>
+  );
+}
+
+function InsidePersonalLayoutStack() {
+  return (
+    <InsidePersonalLayout.Navigator>
+      <InsidePersonalLayout.Screen name="AllUsers" component={UsersScreen} options={{headerShown: false}}/> 
+      <InsidePersonalLayout.Screen name="CurrUser" component={UnselfPersonal} options={{headerShown: false}}/>
+    </InsidePersonalLayout.Navigator>
   );
 }
 
@@ -153,16 +165,15 @@ function MyDrawer() {
           ),
         }}
       />
-{/*       <Drawer.Screen
       <Drawer.Screen
-        name="Настройки"
-        component={Settings}
+        name="Пользователи"
+        component={InsidePersonalLayoutStack}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="settings-outline" size={24} color={color} />
+            <Ionicons name="people-outline" size={24} color={color} />
           ),
         }}
-      /> */}
+      /> 
     </Drawer.Navigator>
   );
 }

@@ -27,7 +27,7 @@ export default function PersonalInfoPage({ navigation }) {
           style={{ flexDirection: "row", alignItems: "center", marginrTop: 25 }}
         >
           <TouchableOpacity
-            style={{ alignItems: "flex-start", margin: 16 }}
+            style={{ alignItems: "flex-start", padding: 16}}
             onPress={navigation.openDrawer}
           >
             <SimpleLineIcons name="menu" size={24} color={theme.textColor} />

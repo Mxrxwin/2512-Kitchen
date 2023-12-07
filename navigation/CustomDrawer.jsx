@@ -102,8 +102,8 @@ export default CustomDrawer = (props) => {
 						}}
 					>
 						{ifAdmin ? (
-							<MaterialCommunityIcons
-								name="crown-outline"
+							<Ionicons
+								name="star"
 								size={28}
 								color="#E1ED00"
 							/>
@@ -166,7 +166,7 @@ export default CustomDrawer = (props) => {
 						/>
 					</GestureDetector>
 				</View>
-				<Text style={styles.verText}>v1.1.1</Text>
+				<Text style={styles.verText}>v1.2.0</Text>
 			</View>
 		</View>
 	);

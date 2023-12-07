@@ -20,7 +20,6 @@ export default function Personal({ navigation }) {
   const [name, setNewName]= useState(userData.displayName);
   const [photo, setNewPhoto]= useState(userData.photoURL);
   const { email, uid, metadata, photoURL } = userData;
-  console.log(userData.metadata.createdAt);
   const defaultPictureURL = "https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
   
   useFocusEffect(
@@ -66,20 +65,19 @@ export default function Personal({ navigation }) {
             }}
           >
             <TouchableOpacity
-              style={{ alignItems: "flex-start", margin: 16 }}
+              style={{ alignItems: "flex-start", padding: 16 }}
               onPress={navigation.openDrawer}
             >
               <SimpleLineIcons name="menu" size={24} color={theme.textColor} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ alignItems: "flex-start", margin: 16 }}
+              style={{ alignItems: "flex-start", padding: 16 }}
               onPress={() => navigation.navigate("ChangePersonal")}
             >
               <Octicons name="paintbrush" size={24} color={theme.textColor} />
             </TouchableOpacity>
         </View>
         <View style={styles.mainBlock}>
-          {console.log('here1')}
           <Image style={styles.image} source={{ uri: (photo === null ? defaultPictureURL : photo)}}></Image>
           <Text style={[styles.mainText, {color: theme.textColor}]}>{name === null ? "username" : name}</Text>
           <Text style={[styles.descText, {color: theme.textColor}]}>{email}</Text>

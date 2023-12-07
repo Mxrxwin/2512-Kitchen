@@ -135,7 +135,7 @@ export default function StatisticScreen({ navigation }) {
           }}
         >
           <TouchableOpacity
-            style={{ alignItems: "flex-start", margin: 16 }}
+            style={{ alignItems: "flex-start", padding: 16 }}
             onPress={navigation.openDrawer}
           >
             <Octicons name="three-bars" size={28} color={theme.textColor} />
@@ -158,7 +158,7 @@ export default function StatisticScreen({ navigation }) {
             />
           </View>
           <TouchableOpacity
-            style={{ alignItems: "flex-start", margin: 16 }}
+            style={{ alignItems: "flex-start", padding: 16 }}
             onPress={() => setSortType(sortType < 3 ? sortType + 1 : 0)}
           >
             <FontAwesome

@@ -245,7 +245,7 @@ export default function MenuScreen({ navigation }) {
 				}}
 			>
 				<TouchableOpacity
-					style={{ alignItems: "flex-start", margin: 16 }}
+					style={{ alignItems: "flex-start", padding: 16 }}
 					onPress={navigation.openDrawer}
 				>
 					<SimpleLineIcons name="menu" size={24} color={theme.textColor} />
@@ -268,7 +268,7 @@ export default function MenuScreen({ navigation }) {
 					/>
 				</View>
 				<TouchableOpacity
-					style={{ alignItems: "flex-start", margin: 16 }}
+					style={{ alignItems: "flex-start", padding: 16 }}
 					onPress={() => setSortType(!sortType)}
 				>
 					<FontAwesome
