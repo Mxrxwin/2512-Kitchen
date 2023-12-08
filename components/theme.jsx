@@ -5,7 +5,8 @@ const theme = {
         backgroundColor: '#FDFDFD',
         searchColor: '#FDFDFD',
         searchPlaceholderColor: "#5555",
-        headerColor: "#FDFDFD"
+        headerColor: "#FDFDFD",
+        setAdminColor: "#DFDFDF"
     },
     dark: {
         theme: 'black',
@@ -13,7 +14,8 @@ const theme = {
         backgroundColor: '#2C2C2C',
         searchColor: '#4444',
         searchPlaceholderColor: "#737373",
-        headerColor: "#404040"
+        headerColor: "#404040",
+        setAdminColor: "#454545"
     }
 }
 

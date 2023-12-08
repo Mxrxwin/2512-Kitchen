@@ -93,6 +93,11 @@ function MyStack() {
         component={ChangePost}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="CurrUser"
+        component={UnselfPersonal}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

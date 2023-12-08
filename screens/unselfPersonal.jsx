@@ -50,7 +50,7 @@ export default function UnselfPersonal({ route, navigation }) {
 								name="arrowleft"
 								size={35}
 								color={theme.textColor}
-								onPress={() => navigation.navigate("AllUsers")}
+								onPress={() => navigation.goBack()}
 							/>
 						</TouchableOpacity>
 					</View>
@@ -59,7 +59,7 @@ export default function UnselfPersonal({ route, navigation }) {
 						style={{ alignItems: "flex-start", padding: 16 }}
 						onPress={() => setUserStatus(uid, !userAdmin)}
 					>
-						<Ionicons name="star" size={28} color={userAdmin ? "#E1ED00" : '#3333'} />
+						<Ionicons name="star" size={28} color={userAdmin ? "#E1ED00" : theme.setAdminColor} />
 					</TouchableOpacity>
           : null}
 				</View>

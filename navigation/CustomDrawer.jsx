@@ -166,7 +166,7 @@ export default CustomDrawer = (props) => {
 						/>
 					</GestureDetector>
 				</View>
-				<Text style={styles.verText}>v1.2.0</Text>
+				<Text style={styles.verText}>v1.2.1</Text>
 			</View>
 		</View>
 	);

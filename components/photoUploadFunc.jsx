@@ -2,6 +2,7 @@ import { addDoc, collection, doc, getDocs,onSnapshot, where, query, deleteDoc, u
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { FIREBASE_DB, FIREBASE_STORAGE } from "../firebase.config";
 import * as imgPeacker from "expo-image-picker";
+import { GetUserByUID } from "./authFunctions";
   
   export function listenToDishes(setItems) {
     onSnapshot(collection(FIREBASE_DB, "Dishes"), (snapshot) => {
@@ -59,7 +60,35 @@ import * as imgPeacker from "expo-image-picker";
     return data;
   }
 
-  
+  export async function FetchComments(id, setFunc) {
+    try {
+      const collectionRef = collection(FIREBASE_DB, "Comments");
+      const docRef = await getDocs(query(collectionRef, where("idParent", "==", id)));
+      docRef.docs.map(async (doc) => {
+        const user = await GetUserByUID(doc.data().UID);
+        const DocData = doc.data();
+        const CommData = Object.assign({}, DocData, { "photoURL": user[0].photoURL });
+        setFunc((prevFiles) => [...prevFiles, CommData].sort((a,b) => b.createdAt - a.createdAt)) 
+    });
+    } catch (e) {
+      console.log(e);
+      return;
+    }
+  }
+
+  export async function AddComment(UID, idParent, text) {
+    try {
+      const docRef = await addDoc(collection(FIREBASE_DB, "Comments"), {
+        UID, 
+        idParent, 
+        text,
+        "createdAt": Date.now()
+      })
+    } catch (e) {
+      console.log(e);
+      return;
+    }
+  }
 
   
   export async function DeleteImage(createdAt, setFunc) {
@@ -102,11 +131,13 @@ import * as imgPeacker from "expo-image-picker";
           deleteDoc(doc.ref);
         });
       })
+      const commentsRef = collection(FIREBASE_DB, "Comments");
+      const docCommentsRef = await getDocs(query(commentsRef, where("idParent", "==", id)));
+      docCommentsRef.forEach((doc) => {
+        deleteDoc(doc.ref);
+      });
   };
-
-
   
-
   export async function PickImage(setImage) {
     let result = await imgPeacker.launchImageLibraryAsync({
      mediaTypes: imgPeacker.MediaTypeOptions.Images,

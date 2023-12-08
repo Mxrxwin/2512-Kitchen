@@ -100,6 +100,17 @@ export async function listAllUsers(setItems) {
 	  });
 };
 
+export async function GetUserByUID(uid) {
+	const collectionRef = collection(FIREBASE_DB, "Users");
+	try {
+		const docRef = await getDocs(query(collectionRef, where("uid", "==", uid)));
+		const data = docRef.docs.map((doc) => doc.data());
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 export async function SetAdmin(uid, prop) {
 	const collectionRef = collection(FIREBASE_DB, "Users");
 	try {
