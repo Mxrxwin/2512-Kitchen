@@ -49,7 +49,7 @@ export default FullPostScreen = ({ route, navigation }) => {
 
   const FetchCommentsMethod = () => {
     setComments([]);
-		FetchComments(id, setComments);
+	FetchComments(id, setComments);
   }
 	const animation = useDynamicAnimation(() => {
 		return {
@@ -57,6 +57,16 @@ export default FullPostScreen = ({ route, navigation }) => {
 			height: 300,
 		};
 	});
+
+	const AddCommentFunc = () => {
+		if (commentText === "") {
+			alert("Вы ввели пустой комментарий");
+			return;
+		}
+		AddComment(currentUser.uid, id, commentText); 
+		setCommentText("");
+		FetchCommentsMethod();
+	}
 
 	React.useEffect(() => {
 		navigation.setOptions({
@@ -88,7 +98,7 @@ export default FullPostScreen = ({ route, navigation }) => {
 		setData(data[0]);
 		setCPFCP(data[0].CPFCP);
 		setIngredients(data[0].Ingredients);
-    FetchCommentsMethod();
+    	FetchCommentsMethod();
 	}
 
 	if (ingredients.length === 0) {
@@ -221,11 +231,7 @@ export default FullPostScreen = ({ route, navigation }) => {
 										marginBottom: 10,
 										flex: 1,
 									}}
-									onPress={() => {
-                    AddComment(currentUser.uid, id, commentText); 
-                    setCommentText("");
-                    FetchCommentsMethod();
-                  }}
+									onPress={() => {AddCommentFunc()}}
 								>
 									<Octicons
 										name="paper-airplane"

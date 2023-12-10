@@ -2,7 +2,7 @@
   "expo": {
     "name": "2512Kitchen",
     "slug": "2512Kitchen",
-    "version": "1.2.0",
+    "version": "1.2.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -25,10 +25,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "b725932e-0495-4507-ba7b-5b18a8c3bff7",
-        "androidStatusBar": {
-          "translucent": false
-        }
+        "projectId": "d018bc1b-b340-4f33-a636-2b289b5d7abb"
       }
     }
   }
