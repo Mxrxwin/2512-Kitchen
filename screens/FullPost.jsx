@@ -21,6 +21,7 @@ import { getAuth } from "firebase/auth";
 
 export default FullPostScreen = ({ route, navigation }) => {
 	const [yValue, setYValue] = useState(0);
+	const [visibleHeader, setVisibleHeader] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [images, setImages] = useState([]);
 	const [data, setData] = useState([]);
@@ -123,10 +124,16 @@ export default FullPostScreen = ({ route, navigation }) => {
 							});
 						}
 						setYValue(e.nativeEvent.contentOffset.y.toFixed(0));
+						if (e.nativeEvent.contentOffset.y.toFixed(0) > 380 && visibleHeader !== true) {
+							setVisibleHeader(true);
+						}
+						else if (e.nativeEvent.contentOffset.y.toFixed(0) <= 380 && visibleHeader !== false){
+							setVisibleHeader(false);
+						}
 					}}
 				>
 					<View style={{ zIndex: 2, width: "20%" }}>
-						<TouchableOpacity style={{ padding: 20 }}>
+						<TouchableOpacity style={{ padding: 20, marginTop: 10 }}>
 							<AntDesign
 								name="arrowleft"
 								size={35}
@@ -146,7 +153,7 @@ export default FullPostScreen = ({ route, navigation }) => {
 						/>
 					</View>
 
-					<View style={{ width: "100%", height: 300 }}></View>
+					<View style={{ width: "100%", height: 290 }}></View>
 
 					<View
 						style={{
@@ -210,7 +217,7 @@ export default FullPostScreen = ({ route, navigation }) => {
 									placeholder="Введите комментарий           "
 									autoCapitalize="sentences"
 									multiline={true}
-                  value={commentText}
+                  					value={commentText}
 									onContentSizeChange={(event) =>
 										setCommentTextHeight(event.nativeEvent.contentSize.height)
 									}
@@ -257,8 +264,10 @@ export default FullPostScreen = ({ route, navigation }) => {
 				</ScrollView>
 				<TopAnimatedHeader
 					navigation={navigation}
-					yValue={yValue}
+					visible={visibleHeader}
 					title={data.title}
+					durationHeader={"300"}
+					durationText={"300"}
 				/>
 			</View>
 		</View>

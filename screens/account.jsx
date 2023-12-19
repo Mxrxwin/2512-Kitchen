@@ -48,6 +48,7 @@ export default function PersonalInfoPage({ navigation }) {
               secureTextEntry={!hidePass}
               value={password}
               onChangeText={setPassword}
+              autoCapitalize="none"
               placeholder="Password"
               placeholderTextColor= {theme.searchPlaceholderColor}
             ></TextInput>

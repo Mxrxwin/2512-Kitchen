@@ -3,7 +3,7 @@ import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebas
 import { FIREBASE_DB, FIREBASE_STORAGE } from "../firebase.config";
 import * as imgPeacker from "expo-image-picker";
 import { GetUserByUID } from "./authFunctions";
-  
+
   export function listenToDishes(setItems) {
     onSnapshot(collection(FIREBASE_DB, "Dishes"), (snapshot) => {
       snapshot.docChanges().forEach((change) => {
@@ -42,6 +42,92 @@ import { GetUserByUID } from "./authFunctions";
       });
     });
   };
+
+  
+  export function listenToMedia(setItems) {
+    onSnapshot(collection(FIREBASE_DB, "Multimedia"), (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+            const data = change.doc.data();
+            setItems((prevItems) => [...prevItems, data].sort((a,b) => a.createdAt - b.createdAt));
+        } else if (change.type === "modified") {
+            setItems(prevItems => {
+              const updatedItems = prevItems.map(item => {
+                if (item.id === change.doc.data().id) {
+                  return change.doc.data();
+                }
+                return item; 
+              });
+              return updatedItems;
+            });
+        }
+      });
+    });
+  };
+
+
+  export async function PickMediaImage(setImage, setDate) {
+    let result = await imgPeacker.launchImageLibraryAsync({
+     mediaTypes: imgPeacker.MediaTypeOptions.Images,
+     allowsEditing: true,
+     quality: 1,
+     exif: true
+    })
+    if (!result.canceled) {
+      const date = result.assets[0].exif.DateTime;
+      const size = {height: result.assets[0].height, width: result.assets[0].width}
+      let unixTime = new Date();
+      if (date !== undefined) {
+        const dateParts = date.split(' ');
+        setDate(new Date(dateParts[0].replaceAll(':', '-') + 'T' + dateParts[1]));
+      }
+      
+      await UploadMediaImage(setImage, result.assets[0].uri, size, unixTime);
+    }
+ }
+
+ 
+  async function UploadMediaImage(setImage, uri, size, date) {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const storageRef = ref(FIREBASE_STORAGE, "MediaPhotos/" + date)
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+
+    uploadTask.on("state_changed", (snapshot) => {
+      const progress = (snapshot.bytesTransferred) / snapshot.totalBytes * 100;
+      console.log(progress);
+    },
+    (error) => {
+      console.log("error -> " + error);
+    }, 
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
+        setImage({...size, downloadURL});
+      });
+    }
+  )
+}
+
+export async function SaveMediaRecond(data) {
+  try {
+    const docRef = await addDoc(collection(FIREBASE_DB, "Multimedia"), data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function UpdateMediaRecond(data) {
+  try {
+    const collectionRef = collection(FIREBASE_DB, "Multimedia");
+    const docRef = await getDocs(query(collectionRef, where("picture", "==", data.picture)));
+    docRef.forEach(async (doc) => {
+        await updateDoc(doc.ref, data)  
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
   export async function FetchImages(id) {
@@ -137,7 +223,7 @@ import { GetUserByUID } from "./authFunctions";
         deleteDoc(doc.ref);
       });
   };
-  
+
   export async function PickImage(setImage) {
     let result = await imgPeacker.launchImageLibraryAsync({
      mediaTypes: imgPeacker.MediaTypeOptions.Images,
