@@ -163,7 +163,7 @@ export default function AddPost({ route, navigation }) {
 								width: "50%",
 							}}
 						>
-							<TouchableOpacity style={{ padding: 20 }}>
+							<TouchableOpacity style={{ padding: 20, marginTop: 10 }}>
 								<AntDesign
 									name="arrowleft"
 									size={35}
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
 	},
 	intupBlock: {
 		zIndex: 2,
-		marginTop: 300,
+		marginTop: 290,
 		borderTopStartRadius: 50,
 		borderTopEndRadius: 50,
 	},

@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 	deleteButton: {
 		zIndex: 1,
 		position: "absolute",
-		marginTop: 25,
+		marginTop: 35,
 		right: 15,
 	},
 });

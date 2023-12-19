@@ -17,6 +17,9 @@ import AddPost from "../screens/AddPost";
 import ChangePost from "../screens/ChangePost";
 import UsersScreen from "../screens/UsersScreen";
 import UnselfPersonal from "../screens/unselfPersonal";
+import MediaScnreen from "../screens/MediaScnreen";
+import MediaPost from "../components/mediaPost";
+import AddMedia from "../screens/AddMedia";
 
 import { useEffect, useState, useContext } from "react";
 import userContext from "../components/userContext";
@@ -25,6 +28,7 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const InsideLayoutLogin = createStackNavigator();
 const InsidePersonalLayout = createStackNavigator();
+const InsideMedialLayout = createStackNavigator();
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -67,6 +71,16 @@ function InsidePersonalLayoutStack() {
       <InsidePersonalLayout.Screen name="AllUsers" component={UsersScreen} options={{headerShown: false}}/> 
       <InsidePersonalLayout.Screen name="CurrUser" component={UnselfPersonal} options={{headerShown: false}}/>
     </InsidePersonalLayout.Navigator>
+  );
+}
+
+function InsideMedialLayoutStack() {
+  return (
+    <InsideMedialLayout.Navigator>
+      <InsideMedialLayout.Screen name="AllMedia" component={MediaScnreen} options={{headerShown: false}}/> 
+      <InsideMedialLayout.Screen name="CurrMedia" component={MediaPost} options={{headerShown: false}}/>
+      <InsideMedialLayout.Screen name="AddMedia" component={AddMedia} options={{headerShown: false}}/>
+    </InsideMedialLayout.Navigator>
   );
 }
 
@@ -176,6 +190,15 @@ function MyDrawer() {
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="people-outline" size={24} color={color} />
+          ),
+        }}
+      /> 
+      <Drawer.Screen
+        name="Медиатека"
+        component={InsideMedialLayoutStack}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="albums-outline" size={24} color={color} />
           ),
         }}
       /> 
