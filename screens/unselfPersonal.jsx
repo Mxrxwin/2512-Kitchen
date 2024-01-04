@@ -21,7 +21,7 @@ export default function UnselfPersonal({ route, navigation }) {
 	const { uid, email, photoURL, createdAt, displayName, isAdmin } = user;
   const [userAdmin, setUserAdmin] = useState(isAdmin);
 	const defaultPictureURL =
-		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
+		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/UserPhotos%2FdefaultPicture.jpg?alt=media&token=25175d34-a3cc-4e1b-b28b-db9ee06fbbdd";
 
 	const getTime = (unix) => {
 		const date = new Date(parseInt(unix));

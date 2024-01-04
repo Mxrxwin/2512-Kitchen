@@ -9,21 +9,22 @@ import {
 } from "react-native";
 import { Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import themeContext from "../components/themeContext";
-import { ChangeName, PickProfileImage, DeleteAddedProfileImage } from "../components/authFunctions";
+import { ChangeName, PickProfileImage, DeleteAddedProfileImage, GetUserByUID } from "../components/authFunctions";
 import { getAuth } from "firebase/auth";
 
 export default function ChangePersonal({ navigation,  }) {
   const theme = useContext(themeContext);
   const leftScreenRef = useRef(true);
 
-  const userData = getAuth();
-  const { displayName, photoURL } = userData.currentUser;
+  const user = getAuth();
+  const { displayName, photoURL } = user.currentUser;
   const UserPhoto = { photoURL, createdAt: -1};
   const [ifImageAdded, setIfImageAdded] = useState(false);
   const [newName, setNewName]= useState(displayName);
   const [newPhoto, setNewPhoto]= useState(UserPhoto);
+  const [newPreviewPhoto, setNewPreviewPhoto]= useState();
   const addedImageRef = useRef();
-  const defaultPictureURL = "https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
+  const defaultPictureURL = "https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/UserPhotos%2FdefaultPicture.jpg?alt=media&token=25175d34-a3cc-4e1b-b28b-db9ee06fbbdd";
   
   useEffect(() => {
     if (newPhoto.photoURL !== photoURL) {
@@ -33,10 +34,18 @@ export default function ChangePersonal({ navigation,  }) {
   }, [newPhoto])
 
   useEffect(() => {
+    async function fetchData() {
+      const userData = await GetUserByUID(user.currentUser.uid);
+      setNewPreviewPhoto(userData.preview);
+    }
+    fetchData();
 		return () => {
 			exit(leftScreenRef.current);
 		};
 	}, []);
+
+
+
 
 	function exit(leftScreen) {
 		if (leftScreen && addedImageRef.current !== undefined) {
@@ -64,7 +73,7 @@ export default function ChangePersonal({ navigation,  }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ alignItems: "flex-start", margin: 16 }}
-              onPress={() => {leftScreenRef.current = false; ChangeName(navigation, newName, newPhoto.photoURL);}}
+              onPress={() => {leftScreenRef.current = false; ChangeName(navigation, newName, newPhoto.photoURL, newPreviewPhoto.photoURL);}}
             >
               <Feather name="check" size={34} color={theme.textColor} />
             </TouchableOpacity>
@@ -82,7 +91,7 @@ export default function ChangePersonal({ navigation,  }) {
                   justifyContent: ifImageAdded ? 'flex-end' : 'center', 
                   alignItems: ifImageAdded ? 'flex-end' : 'center'
                 }]}  
-                onPress={() => PickProfileImage(setNewPhoto)} activeOpacity={0.8}>
+                onPress={() => PickProfileImage(setNewPhoto, setNewPreviewPhoto)} activeOpacity={0.8}>
                  <MaterialIcons name="photo-camera" size={ifImageAdded ? 70 : 100} color="#555"/>
               </TouchableOpacity>
               

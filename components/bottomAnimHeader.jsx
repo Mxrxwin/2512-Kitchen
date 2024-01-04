@@ -1,6 +1,5 @@
 import React, {useContext} from "react";
-import { TouchableOpacity, Text, Dimensions, StatusBar, Platform } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { Text } from "react-native";
 import { MotiView } from "moti";
 import themeContext from "./themeContext";
 import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";

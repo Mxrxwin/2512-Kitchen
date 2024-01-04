@@ -33,6 +33,7 @@ export default function AddMedia({ navigation, route }) {
 		width: item === null ? 1300 : item.width,
 		downloadURL: item === null ? defaultPicture : item.picture,
 	});
+	const [preview, setPreview] = useState();
 	const [text, setText] = useState(item === null ? "" : item.text);
 	const [date, setDate] = useState(item === null ? new Date() : new Date(new Date(item.createdAt).toISOString()));
 	const [mode, setMode] = useState("date");
@@ -78,6 +79,7 @@ export default function AddMedia({ navigation, route }) {
 			width: pictureData.width,
 			text,
 			picture: pictureData.downloadURL,
+			preview: preview.downloadURL
 		};
 		if (item === null) {
 			SaveMediaRecond(data);
@@ -146,7 +148,7 @@ export default function AddMedia({ navigation, route }) {
 				</View>
 				<ScrollView style={{ flex: 1 }}>
 					<TouchableOpacity
-						onPress={() => PickMediaImage(setPictureData, setDate)}
+						onPress={() => PickMediaImage(setPictureData, setPreview, setDate)}
 						activeOpacity={1}
 					>
 						<Image

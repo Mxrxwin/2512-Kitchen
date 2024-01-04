@@ -5,7 +5,6 @@ import {
 	TouchableOpacity,
 	View,
 	RefreshControl,
-	FlatList,
 	Image,
 	Dimensions,
 } from "react-native";
@@ -14,24 +13,19 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import themeContext from "../components/themeContext";
 import { Loading } from "../components/loading";
 import { listenToMedia } from "../components/photoUploadFunc";
-import userContext from "../components/userContext";
 import { CheckUserAdmin } from "../components/authFunctions";
-import BottomSheet from "../components/bottomSheet";
-import { MediaPost } from "../components/mediaPost";
 import { getAuth } from "firebase/auth";
 
 export default function MediaScnreen({ navigation }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [items, setItems] = useState([]);
-	const itemLength = useRef(0);
 	const [filteredItems, setFilteredItems] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const theme = useContext(themeContext);
 
+
 	const [ifAdmin, setIfAdmin] = useState(false);
 	CheckUserAdmin(getAuth().currentUser, setIfAdmin);
-	const [darker, setDarker] = useState(false);
-	const [showSort, setShowSort] = useState(false);
 	const [sortType, setSortType] = useState(["Название", 0]);
 
 	function FetchPosts() {
@@ -100,6 +94,7 @@ export default function MediaScnreen({ navigation }) {
 					</View>
 				</View>
 				<ScrollView
+					showsVerticalScrollIndicator={false}
 					refreshControl={
 						<RefreshControl refreshing={isLoading} onRefresh={FetchPosts} />
 					}
@@ -125,7 +120,7 @@ export default function MediaScnreen({ navigation }) {
 								key={index}
 							>
 								<Image
-									source={{ uri: item.picture }}
+									source={{ uri: item.preview }}
 									style={{
 										height: Dimensions.get("screen").width / 4 - 2,
 										aspectRatio: 1,

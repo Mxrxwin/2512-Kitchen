@@ -31,8 +31,6 @@ import { PopupMenuPage } from "../components/popupMenuPage";
 import userContext from "../components/userContext";
 import { CheckUserAdmin } from "../components/authFunctions";
 
-
-
 export default function MenuScreen({ navigation }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const translateY = useRef(new Animated.Value(-350)).current;
@@ -47,7 +45,6 @@ export default function MenuScreen({ navigation }) {
 	const [addPost, setAppPost] = useState(false);
 	const [changePost, setChangePost] = useState(-1);
 
-	const [endOfPrev, setEndOfPrev] = useState(null);
 	const [nextId, setNextId] = useState();
 	const [title, setTitle] = useState("");
 	const [dishes, setDishes] = useState(["", "", "", "", "", "", ""]);
@@ -55,7 +52,6 @@ export default function MenuScreen({ navigation }) {
 	const [dateEnd, setDateEnd] = useState("");
 
 	const [visible, setVisible] = useState(false);
-	const [changePosibility, setChangePosibility] = useState(true);
 	const changeID = useRef(999);
 	const user = useContext(userContext);
 	const [ifUserAdmin, setIfUserAdmin] = useState(false);
@@ -71,24 +67,39 @@ export default function MenuScreen({ navigation }) {
 	function FetchPosts() {
 		setItems([]);
 		setFilteredItems([]);
-		listenToMenu(setItems);
-		listenToMenu(setFilteredItems);
 	}
 
-	useEffect(() => {
+	function Sorting(items) {
+		console.log(items);
 		const maxId = items.reduce(
 			(max, current) => (current.id > max.id ? current : max),
 			items[0]
 		);
-		setEndOfPrev(maxId !== undefined ? maxId.dateEnd : undefined);
+		const endOfPrev = maxId !== undefined ? maxId.dateEnd : undefined;
+		if (endOfPrev !== undefined) {
+			GetTime(endOfPrev)
+		}
 		setNextId(items.length);
-		sortType
-			? items.sort((a, b) => a.id - b.id)
-			: items.sort((a, b) => b.id - a.id);
-	}, [items]);
+		const sortedItems = [...items];
+		sortedItems.sort((a, b) => (sortType ? a.id - b.id : b.id - a.id));
+		setItems(sortedItems);
+	}
+
+	useEffect(() => {
+		Sorting(items);
+	}, [sortType]);
 
 	useEffect(() => {
 		FetchPosts();
+		const unsubscribe = listenToMenu((menuItems) => {
+			setItems(menuItems);
+			setFilteredItems(menuItems);
+			Sorting(menuItems);
+		});
+
+		return () => {
+			unsubscribe();
+		};
 	}, []);
 
 	useEffect(() => {
@@ -157,13 +168,11 @@ export default function MenuScreen({ navigation }) {
 
 	function AddNewPost() {
 		setAppPost(!addPost);
-		if (!addPost) {
+		if (addPost === false) {
 			scrollViewRef.current.scrollTo({ y: 0 });
 		} else {
 			setNextId(items.length);
 			setTitle("");
-			setDateEnd("");
-			setDateStart("");
 			setDishes(["", "", "", "", "", "", ""]);
 		}
 	}
@@ -173,13 +182,39 @@ export default function MenuScreen({ navigation }) {
 		PopupVisibleChange(true);
 	}
 
+	function GetTime(time) {
+        const endOfPrev = time.split(".");
+        const inputDate = new Date('20' + endOfPrev[2], endOfPrev[1] - 1, endOfPrev[0]);
+        const DateUnix = Math.floor(inputDate / 1000);
+
+        const timeToStart = (DateUnix + 24*60*60);
+        const timeToEnd = DateUnix + 24*60*60*7;
+        
+        const timeToStartFormat = GetTimeToFormat(timeToStart);
+        const timeToEndFormat = GetTimeToFormat(timeToEnd);
+		setDateStart(timeToStartFormat);
+		setDateEnd(timeToEndFormat);
+    }
+
+    function GetTimeToFormat(time) {
+        var date = new Date(time * 1000);
+
+        var year = date.getFullYear().toString().slice(2,4);
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+
+        var outputDateStr = day + '.' + month + '.' + year;
+        return outputDateStr;
+    }
+
 	useEffect(() => {
+		console.log("start");
 		Animated.timing(translateY, {
 			toValue: addPost ? 0 : 1,
 			duration: 200,
 			easing: Easing.elastic(1.1),
 			useNativeDriver: true,
-		}).start();
+		}).start(() => console.log("finish"));
 
 		Animated.timing(translateX, {
 			toValue: addPost ? 0 : 1,
@@ -292,7 +327,6 @@ export default function MenuScreen({ navigation }) {
 					>
 						<MenuInputBlock
 							id={nextId}
-							endOfPrev={endOfPrev}
 							title={title}
 							titleFunc={setTitle}
 							dishes={dishes}

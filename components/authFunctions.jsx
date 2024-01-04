@@ -8,6 +8,7 @@ import { doc, getDoc, setDoc, collection, onSnapshot, updateDoc, getDocs, query,
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { FIREBASE_DB, FIREBASE_STORAGE, FIREBASE_AUTH } from "../firebase.config";
 import * as imgPeacker from "expo-image-picker";
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const authObj = FIREBASE_AUTH;
 
@@ -125,7 +126,7 @@ export async function SetAdmin(uid, prop) {
 	}
 }
 
-export async function ChangeName(navigation, userName, userPhoto) {
+export async function ChangeName(navigation, userName, userPhoto, userPreview) {
 	const auth = getAuth();
 	if (userName === auth.currentUser.displayName && userPhoto === auth.currentUser.photoURL) {
 		navigation.navigate("Personal");
@@ -133,10 +134,12 @@ export async function ChangeName(navigation, userName, userPhoto) {
 	if (userPhoto !== auth.currentUser.photoURL && auth.currentUser.photoURL !== null) {
 		const createdAt = auth.currentUser.photoURL.split('?')[0].split('%2F')[2];
 		DeleteAddedProfileImage(createdAt);
+
 	}
 	const update = {
 		displayName: userName,
-		photoURL: userPhoto
+		photoURL: userPhoto,
+		preview: userPreview
 	};
 	updateProfile(auth.currentUser, update)
 	.then(() => {
@@ -156,7 +159,7 @@ export async function ChangeName(navigation, userName, userPhoto) {
 	}
 }
 
-export async function PickProfileImage(setImage) {
+export async function PickProfileImage(setImage, setPreview) {
     let result = await imgPeacker.launchImageLibraryAsync({
      mediaTypes: imgPeacker.MediaTypeOptions.Images,
      allowsEditing: true,
@@ -165,17 +168,28 @@ export async function PickProfileImage(setImage) {
     })
 
     if (!result.canceled) {
-     await UploadImage(setImage, result.assets[0].uri)
+	const manipResult = await ImageManipulator.manipulateAsync(result.assets[0].uri, [], {
+		compress: 0.4, 
+		format: ImageManipulator.SaveFormat.JPEG,
+	});
+	const manipResultPreview = await ImageManipulator.manipulateAsync(result.assets[0].uri, 
+		[{ resize: { width: 400}}], 
+	{
+		compress: 0.5, 
+		format: ImageManipulator.SaveFormat.JPEG,
+	});
+    const createdAt = new Date().getTime();
+     await UploadImage(setImage, manipResult.uri, createdAt, "")
+     await UploadImage(setPreview, manipResultPreview.uri, createdAt, "preview")
     }
  }
 
- async function UploadImage(setImage, uri) {
+ async function UploadImage(setImage, uri, createdAt, additionalFolder) {
 	const auth = getAuth()
-    const createdAt = new Date().getTime();
     const response = await fetch(uri);
     const blob = await response.blob();
 
-    const storageRef = ref(FIREBASE_STORAGE, "UserPhotos/" + auth.currentUser.uid + "/" + createdAt )
+    const storageRef = ref(FIREBASE_STORAGE, "UserPhotos/" + auth.currentUser.uid + "/" + createdAt + additionalFolder)
     const uploadTask = uploadBytesResumable(storageRef, blob);
 
     uploadTask.on("state_changed", (snapshot) => {
@@ -193,10 +207,15 @@ export async function PickProfileImage(setImage) {
     )
   }
 
-  export async function DeleteAddedProfileImage(createdAt) {
+  export async function DeleteAddedProfileImage(createdAt) {	
 	const auth = getAuth()
-	const storageRef = ref(FIREBASE_STORAGE, "UserPhotos/" + auth.currentUser.uid + "/" + createdAt)
+	const storageRef = ref(FIREBASE_STORAGE, "UserPhotos/" + auth.currentUser.uid + "/" + createdAt + "")
+	const storagePreviewRef = ref(FIREBASE_STORAGE, "UserPhotos/" + auth.currentUser.uid + "/" + createdAt + "preview")
 	deleteObject(storageRef)
+	.catch((error) => {
+		console.log(error);
+	});
+	deleteObject(storagePreviewRef)
 	.catch((error) => {
 		console.log(error);
 	});

@@ -6,9 +6,9 @@ import { getAuth } from "firebase/auth";
 import { GetUserByUID } from "./authFunctions";
 
 export const Comment = ({ item, navigation, currentUID, ifSAdmin}) => {
-	const { UID, photoURL, text } = item;
+	const { UID, previewURL, text } = item;
 	const defaultPictureURL =
-		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
+		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/UserPhotos%2FdefaultPicture.jpg?alt=media&token=25175d34-a3cc-4e1b-b28b-db9ee06fbbdd";
 	const theme = useContext(themeContext);
 
 	const Navigate = async () => {
@@ -27,7 +27,7 @@ export const Comment = ({ item, navigation, currentUID, ifSAdmin}) => {
 			<TouchableOpacity style={{flex: 1}} onPress={() => Navigate()}>
 				<Image
 					style={styles.PostImage}
-					source={{ uri: photoURL === null ? defaultPictureURL : photoURL }}
+					source={{ uri: previewURL === null ? defaultPictureURL : previewURL }}
 				/>
 			</TouchableOpacity>
 			<Text style={[styles.text, {color: theme.textColor}]}>

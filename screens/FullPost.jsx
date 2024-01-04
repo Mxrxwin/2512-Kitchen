@@ -37,9 +37,7 @@ export default FullPostScreen = ({ route, navigation }) => {
 	const [commentText, setCommentText] = useState("");
 	const [commentTextHeight, setCommentTextHeight] = useState(0);
 	CheckUserSAdmin(currentUser, setIfSAdmin);
-	const defaultPictureURL =
-		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
-
+	
 	React.useEffect(() => {
 		if (user !== null) {
 			CheckUserAdmin(user, setIfUserAdmin);

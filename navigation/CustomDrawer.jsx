@@ -35,7 +35,7 @@ export default CustomDrawer = (props) => {
   	let toggle = [0,0];
 	CheckUserAdmin(userData.currentUser, setIfAdmin);
 	const defaultPictureURL =
-		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/Photos%2F2519237903.jpg?alt=media&token=33c4fac3-eda1-4fe3-9929-ad2b50d9a046";
+		"https://firebasestorage.googleapis.com/v0/b/fir-kitchen-39a69.appspot.com/o/UserPhotos%2FdefaultPicture.jpg?alt=media&token=25175d34-a3cc-4e1b-b28b-db9ee06fbbdd";
 
 	const pan = Gesture.Pan()
 		.runOnJS(true)
@@ -166,7 +166,7 @@ export default CustomDrawer = (props) => {
 						/>
 					</GestureDetector>
 				</View>
-				<Text style={styles.verText}>v1.3.0</Text>
+				<Text style={styles.verText}>v1.3.1</Text>
 			</View>
 		</View>
 	);

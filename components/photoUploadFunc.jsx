@@ -1,8 +1,9 @@
 import { addDoc, collection, doc, getDocs,onSnapshot, where, query, deleteDoc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject, listAll } from "firebase/storage";
 import { FIREBASE_DB, FIREBASE_STORAGE } from "../firebase.config";
 import * as imgPeacker from "expo-image-picker";
 import { GetUserByUID } from "./authFunctions";
+import * as ImageManipulator from 'expo-image-manipulator';
 
   export function listenToDishes(setItems) {
     onSnapshot(collection(FIREBASE_DB, "Dishes"), (snapshot) => {
@@ -23,33 +24,32 @@ import { GetUserByUID } from "./authFunctions";
 
     
   export function listenToMenu(setItems) {
-    onSnapshot(collection(FIREBASE_DB, "Menu"), (snapshot) => {
+    let items = [];
+    return onSnapshot(collection(FIREBASE_DB, "Menu"), (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
             const data = change.doc.data();
-            setItems((prevItems) => [...prevItems, data]);
+            items.push(data);
         } else if (change.type === "modified") {
-            setItems(prevItems => {
-              const updatedItems = prevItems.map(item => {
-                if (item.id === change.doc.data().id) {
-                  return change.doc.data();
-                }
-                return item; 
-              });
-              return updatedItems;
-            });
+            const foundItem = items.find(item => item.id === change.doc.data().id);
+            const foundItemIndex = items.indexOf(foundItem);
+            items[foundItemIndex] = change.doc.data();
         }
       });
+      setItems(items);
     });
   };
 
   
   export function listenToMedia(setItems) {
-    onSnapshot(collection(FIREBASE_DB, "Multimedia"), (snapshot) => {
+   onSnapshot(collection(FIREBASE_DB, "Multimedia"), (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
             const data = change.doc.data();
-            setItems((prevItems) => [...prevItems, data].sort((a,b) => a.createdAt - b.createdAt));
+            setItems((prevItems) => {
+              const updatedItems = prevItems.filter(item => item.createdAt !== data.createdAt);
+              return [...updatedItems, data].sort((a, b) => a.createdAt - b.createdAt);
+            });
         } else if (change.type === "modified") {
             setItems(prevItems => {
               const updatedItems = prevItems.map(item => {
@@ -62,11 +62,11 @@ import { GetUserByUID } from "./authFunctions";
             });
         }
       });
-    });
+    }); 
   };
 
 
-  export async function PickMediaImage(setImage, setDate) {
+  export async function PickMediaImage(setImage, setPreview, setDate) {
     let result = await imgPeacker.launchImageLibraryAsync({
      mediaTypes: imgPeacker.MediaTypeOptions.Images,
      allowsEditing: true,
@@ -74,24 +74,35 @@ import { GetUserByUID } from "./authFunctions";
      exif: true
     })
     if (!result.canceled) {
+      const manipResult = await ImageManipulator.manipulateAsync(result.assets[0].uri, [], {
+        compress: 0.4, 
+        format: ImageManipulator.SaveFormat.JPEG,
+      });
+      const manipResultPreview = await ImageManipulator.manipulateAsync(result.assets[0].uri, 
+        [{ resize: { width: 500}}], 
+        {
+          compress: 0.5, 
+          format: ImageManipulator.SaveFormat.JPEG,
+        });
       const date = result.assets[0].exif.DateTime;
-      const size = {height: result.assets[0].height, width: result.assets[0].width}
-      let unixTime = new Date();
+      const size = {height: manipResult.height, width: manipResult.width}
+      let unixTime = new Date().getTime();
       if (date !== undefined) {
         const dateParts = date.split(' ');
-        setDate(new Date(dateParts[0].replaceAll(':', '-') + 'T' + dateParts[1]));
+        unixTime = new Date(dateParts[0].replaceAll(':', '-') + 'T' + dateParts[1]);
+        setDate(unixTime);
       }
-      
-      await UploadMediaImage(setImage, result.assets[0].uri, size, unixTime);
+      await UploadMediaImage(setPreview, manipResultPreview.uri, size, unixTime, "MediaPreviewPhotos/");
+      await UploadMediaImage(setImage, manipResult.uri, size, unixTime, "MediaPhotos/");
     }
  }
 
  
-  async function UploadMediaImage(setImage, uri, size, date) {
+  async function UploadMediaImage(setFunc, uri, size, date, folder) {
     const response = await fetch(uri);
     const blob = await response.blob();
 
-    const storageRef = ref(FIREBASE_STORAGE, "MediaPhotos/" + date)
+    const storageRef = ref(FIREBASE_STORAGE, folder + new Date(date).getTime())
     const uploadTask = uploadBytesResumable(storageRef, blob);
 
     uploadTask.on("state_changed", (snapshot) => {
@@ -103,7 +114,7 @@ import { GetUserByUID } from "./authFunctions";
     }, 
     () => {
       getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
-        setImage({...size, downloadURL});
+        setFunc({...size, downloadURL});
       });
     }
   )
@@ -153,7 +164,7 @@ export async function UpdateMediaRecond(data) {
       docRef.docs.map(async (doc) => {
         const user = await GetUserByUID(doc.data().UID);
         const DocData = doc.data();
-        const CommData = Object.assign({}, DocData, { "photoURL": user[0].photoURL });
+        const CommData = Object.assign({}, DocData, { "previewURL": user[0].preview });
         setFunc((prevFiles) => [...prevFiles, CommData].sort((a,b) => b.createdAt - a.createdAt)) 
     });
     } catch (e) {
@@ -233,7 +244,11 @@ export async function UpdateMediaRecond(data) {
     })
 
     if (!result.canceled) {
-     await UploadImage(setImage, result.assets[0].uri)
+      const manipResult = await ImageManipulator.manipulateAsync(result.assets[0].uri, [], {
+        compress: 0.4, 
+        format: ImageManipulator.SaveFormat.JPEG,
+      });
+     await UploadImage(setImage, manipResult.uri)
     }
  }
 
